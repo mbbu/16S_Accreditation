@@ -11,3 +11,12 @@ I have created a private repo for this exercise. Please share your GitHub userna
 - A team to convert the pipeline to a workflow language (Nextflkow or Snakemake)
 - Report writing, we will need to link the report to the analysis. A Github page would be great. 
 
+Some details:
+- The test data is located in the `/data/accredetation/16S/test` folder. 
+- It is organized into:
+    - Data
+    - Results
+    - Code: This is under version control. Only send output that needs to be uploaded to GitHub
+    - Report
+    - tmp
+  
