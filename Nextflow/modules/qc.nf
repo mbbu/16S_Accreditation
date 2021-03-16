@@ -63,3 +63,20 @@ process TRIMMOMATIC {
     LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36
     """
 }
+
+// Process 1c: Post trimming QC
+process POST_FASTQC {
+    publishDir path: { "${params.outdir}/fastqc_post" }
+
+    input:
+    tuple val(sample_id), path(read_R1), path(read_R2)
+
+    output:
+    path "${sample_id}_logs"
+
+    script:
+    """
+    mkdir ${sample_id}_logs
+    fastqc -o ${sample_id}_logs -f fastq -q ${read_R1} ${read_R2}
+    """
+}
