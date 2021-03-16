@@ -1,20 +1,11 @@
-/*
-
-Enable DSL 2 syntax
-
-*/
+//Enable DSL 2 syntax
 
 nextflow.enable.dsl = 2
 
-
-/*
-
-Process 1a: Quality check --Tool: fastqc
-
-*/
+//Process 1a: Quality check --Tool: fastqc
 
 process FASTQC {
-    publishDir "$outdir/fastqc_raw"
+    publishDir path: { "${params.outdir}/fastqc_raw" }
 
     input:
     tuple val(sample_id), path(reads)
@@ -29,21 +20,16 @@ process FASTQC {
     """
 }
 
-
-/*
-
-Process 1b: Trimming --Tool: trimmomatic
-
-*/
+//Process 1b: Trimming --Tool: trimmomatic
 
 process TRIMMOMATIC {
-    publishDir "$outdir/trimming"
+    publishDir path: { "${params.outdir}/trimming" }
 
     input:
     tuple val(sample_id), path(reads)
 
     output:
-    tuple path(fq_1_paired), path(fq_2_paired)
+    tuple val(sample_id), path(fq_1_paired), path(fq_2_paired)
 
     script:
     fq_1_paired = sample_id + '_R1.paired.fastq'
