@@ -27,6 +27,7 @@ include {
 
 include {
     CHIMERA_DETECTION;
+    REFERENCE_DB;
 } from "./modules/chimeras.nf"
 
 
@@ -47,6 +48,9 @@ workflow{
     FASTQC(read_pairs_ch, params.outdir)
     // process 1b
     TRIMMOMATIC(read_pairs_ch, params.outdir)
-    //process 3
-    CHIMERA_DETECTION(params.outdir)
+    // process 3a
+    REFERENCE_DB
+    // process 3b
+    CHIMERA_DETECTION(params.outdir, REFERENCE_DB.out)
+
 }
