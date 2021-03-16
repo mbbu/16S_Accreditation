@@ -9,7 +9,25 @@ nextflow.enable.dsl = 2
 
 /*
 
-Process 3: Chimera Detection --Tool: usearch
+Process 3a: Reference_db --Tool: wget
+
+*/
+
+process REFERENCE_DB{
+    output:
+    path 'reference_db', emit: reference_db
+
+    script:
+    """
+    wget https://mothur.s3.us-east-2.amazonaws.com/wiki/silva.bacteria.zip
+    unzip *.zip && echo */*.bacteria.fasta > reference_db
+
+    """
+}
+
+/*
+
+Process 3b: Chimera Detection --Tool: usearch
 
 */
 
@@ -37,15 +55,15 @@ process CHIMERA_DETECTION {
 
     script:
     """
-    usearch -uchime2_ref $merged_reads -db $reference_db \
+    usearch -uchime2_ref $merged_reads -db $reference_db/*.fasta \
     -uchimeout chimera_out.fastq -strand plus -mode sensitive
 
-    usearch -orient $merged_reads_dir -db $reference_db \
+    usearch -orient $merged_reads_dir -db $reference_db/*.fasta \
     -fastqout oriented.fastq -tabbedout orient.txt
 
-    usearch -fastq_filter oriented_fastq fastq_maxee 1.0 -fastaout filtered.fastq
+    usearch -fastq_filter oriented_fastq fastq_maxee 1.0 -fastqout filtered.fastq
 
-    usearch -fastx_uniques filtered.fastq -fastaout uniques.fastq -sizeout -relabel Uniq
+    usearch -fastx_uniques filtered.fastq -fastqout uniques.fastq -sizeout -relabel Uniq
 
     usearch -cluster_otus uniques.fastq -otus otus.fastq -uparseout uparse.txt -relabel Otu
 

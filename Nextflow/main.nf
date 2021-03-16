@@ -13,7 +13,7 @@ params.outdir = "Results"
 //Import modules here
 
 include { FASTQC; TRIMMOMATIC; POST_FASTQC } from "./modules/qc.nf" addParams(outdir: "${params.outdir}")
-include { CHIMERA_DETECTION } from "./modules/chimeras.nf"
+include { CHIMERA_DETECTION; REFERENCE_DB } from "./modules/chimeras.nf"
 
 // Set the channel for the inputs
 Channel
@@ -29,6 +29,8 @@ workflow{
     TRIMMOMATIC(read_pairs_ch)
     // process 1c
     POST_FASTQC(TRIMMOMATIC.out)
-    //process 3
-    CHIMERA_DETECTION(params.outdir)
+    // process 3a Get Reference DB
+    REFERENCE_DB
+    // process 3b
+    CHIMERA_DETECTION(params.outdir, REFERENCE_DB.out)
 }
