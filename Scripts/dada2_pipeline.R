@@ -1,8 +1,13 @@
 #! usr/bin/env Rscript
+library(profvis)
+#document the resources used ant time it takes
+profvis({
 library(dada2)
 packageVersion("dada2") 
 
-list.files() # make sure what we think is here is actually here
+#setwd("path to working directory")
+
+list.files() #make sure what we think is here is actually here
 
 ## first we're setting a few variables we're going to use ##
 # one with all sample names, by scanning our "samples" file we made earlier
@@ -19,13 +24,12 @@ filtered_forward_reads <- paste0(samples, "_R1_filtered.fastq.gz")
 filtered_reverse_reads <- paste0(samples, "_R2_filtered.fastq.gz")
 
 #plot quality profile. this will inform the trimming
-rawplot <- plotQualityProfile(forward_reads)
-
+rawplotFreads <- plotQualityProfile(forward_reads)
+rawplotRreads <- plotQualityProfile(reverse_reads)
 #Saving plot into a specified format
 dev.copy(pdf,'rawplot.pdf')
 dev.off()
-
-rawplot <- plotQualityProfile(reverse_reads)
+#looking at specific samples quality profile
 rawplotR <- plotQualityProfile(reverse_reads[5])
 rawplotF <- plotQualityProfile(forward_reads[5])
 
@@ -211,3 +215,4 @@ with(pars[1:20,],rarecurve(otu_table(phyloseq_object),step = 150,ylab = "Observe
 
                            
                          
+})
