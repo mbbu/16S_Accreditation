@@ -20,7 +20,9 @@ filtered_reverse_reads <- paste0(samples, "_R2_filtered.fastq.gz")
 
 #plot quality profile. this will inform the trimming
 rawplot <- plotQualityProfile(forward_reads)
-dev.copy(pdf,rawplot)
+
+#Saving plot into a specified format
+dev.copy(pdf,'rawplot.pdf')
 dev.off()
 
 rawplot <- plotQualityProfile(reverse_reads)
