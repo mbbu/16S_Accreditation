@@ -11,7 +11,12 @@ list.files() #make sure what we think is here is actually here
 
 ## first we're setting a few variables we're going to use ##
 # one with all sample names, by scanning our "samples" file we made earlier
-samples <- scan("samples", what="character")
+#samples <- scan("samples", what="character")- this code worked in conjunction with a bash script
+#reading sample names using r
+ForwardF <- sort(list.files(, pattern= c("*_R1.fastq"), full.names = TRUE))
+ForwardR <- sort(list.files(, pattern= c("*_R2.fastq"), full.names = TRUE))
+reads <- c(ForwardF,ForwardR)
+samples <- sapply(strsplit(basename(reads), "_"), `[`, 1)
 
 # one holding the file names of all the forward reads
 forward_reads <- paste0(samples, "_R1.fastq")
