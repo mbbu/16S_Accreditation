@@ -24,13 +24,16 @@ Channel
 
 workflow{
     // process 1a
-    FASTQC(read_pairs_ch)
+    //FASTQC(read_pairs_ch)
     // process 1b
     TRIMMOMATIC(read_pairs_ch)
     // process 1c
     POST_FASTQC(TRIMMOMATIC.out)
+    //process 3a merge reads
+    USEARCH_MERGE(TRIMMOMATIC.out.collect())
     // process 3a Get Reference DB
-    REFERENCE_DB
+    //TODO: move database as an input parameter
+    REFERENCE_DB()
     // process 3b
-    CHIMERA_DETECTION(params.outdir, REFERENCE_DB.out)
+    CHIMERA_DETECTION(USEARCH_MERGE.out, REFERENCE_DB.out)
 }
