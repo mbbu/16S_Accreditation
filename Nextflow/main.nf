@@ -13,7 +13,7 @@ params.outdir = "Results"
 //Import modules here
 
 include { FASTQC; TRIMMOMATIC; POST_FASTQC } from "./modules/qc.nf" addParams(outdir: "${params.outdir}")
-include { CHIMERA_DETECTION; REFERENCE_DB } from "./modules/chimeras.nf"
+include { USEARCH_MERGE; CHIMERA_DETECTION; REFERENCE_DB } from "./modules/chimeras.nf"
 
 // Set the channel for the inputs
 Channel
