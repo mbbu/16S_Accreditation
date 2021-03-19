@@ -38,8 +38,7 @@ workflow{
     
     // PART FOUR
     // step 1
-    input_ch = channel.fromPath(params.otufastq)
-    OTU_conversion(input_ch)
+    OTU_conversion(CHIMERA_DETECTION.out.otus_fastq)
     // step 2
     MAFFT_alignment(OTU_conversion.out)			
     // step 3
@@ -49,8 +48,7 @@ workflow{
     // step 5
     Midpoint_root(Phylogenetic_Tree.out)
     // step 6
-    inp_ch = channel.fromPath(params.otu_txt)
-    OTUtable_to_QiimeArtifact(inp_ch)
+    OTUtable_to_QiimeArtifact(CHIMERA_DETECTION.out.otutab_txt)
     //step 7
     Feature_Table(OTUtable_to_QiimeArtifact.out)	
     
