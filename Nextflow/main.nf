@@ -6,10 +6,10 @@ nextflow.enable.dsl = 2
 
 //Import modules here
 
-include { FASTQC; TRIMMOMATIC; POST_FASTQC } from "./modules/qc.nf" addParams(outdir: "${params.outdir}")
+include { FASTQC; TRIMMOMATIC; POST_FASTQC } from "./modules/qc.nf"
 include { USEARCH_MERGE; CHIMERA_DETECTION; REFERENCE_DB } from "./modules/chimeras.nf"
 include {OTU_conversion; MAFFT_alignment; Masking; Phylogenetic_Tree; Midpoint_root; OTUtable_to_QiimeArtifact; Feature_Table}from './modules/artifacts.nf' 
-include { alpha_diversity; shannon_diversity ; beta_diversity }from './modules/visualization'
+include { alpha_diversity; shannon_diversity ; beta_diversity }from './modules/visualization.nf'
 
 //Run the main workflow below:
 
