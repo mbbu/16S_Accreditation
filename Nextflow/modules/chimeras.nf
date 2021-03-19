@@ -1,9 +1,40 @@
 // Enable DSL 2 syntax
 nextflow.enable.dsl = 2
 
+// Process 3a: Merge the reads
+process USEARCH_MERGE {
+    publishDir path: { "${params.outdir}/merge" }
+    input:
+    path (fastq)
+
+    output:
+    path "all_reads_merged.fastq"
+    //path "merge.log"
+
+    script:
+    """
+    mkdir -p u_merge
+    cp ${fastq}* u_merge/. && cd u_merge
+
+    # Test to find the limit to use for merging
+    usearch -fastq_mergepairs *_R1.paired.fastq -relabel @ -report ../merge.log
+
+    # Extract the limits
+    low_lim=`grep "Min" ../merge.log | grep -o "[0-9]\\+"`
+    high_lim=`grep "Max" ../merge.log | grep -o "[0-9]\\+"`
+
+    # Merge the Forward and Reverse
+    usearch -fastq_mergepairs *_R1.paired.fastq -relabel @ \
+    -fastq_maxdiffs 10 -fastq_pctid 10 \
+    -fastq_minmergelen \$low_lim -fastq_maxmergelen \$high_lim \
+    -fastqout ../all_reads_merged.fastq
+
+    # Clean up
+    cd .. && rm -rf u_merge
+    """
+}
 
 // Process 3b: Reference_db --Tool: wget
-
 process REFERENCE_DB{
     publishDir path: { "${params.outdir}/database" }
 
@@ -19,7 +50,6 @@ process REFERENCE_DB{
 }
 
 // Process 3c: Chimera Detection --Tool: usearch
-
 process CHIMERA_DETECTION {
     publishDir "$outdir/chimera", mode: 'copy'
 
