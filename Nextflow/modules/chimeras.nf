@@ -1,43 +1,31 @@
-/*
-
-Enable DSL 2 syntax
-
-*/
-
+// Enable DSL 2 syntax
 nextflow.enable.dsl = 2
 
 
-/*
-
-Process 3a: Reference_db --Tool: wget
-
-*/
+// Process 3b: Reference_db --Tool: wget
 
 process REFERENCE_DB{
+    publishDir path: { "${params.outdir}/database" }
+
     output:
-    path 'reference_db', emit: reference_db
+    path 'reference_db/silva.bacteria.fasta', emit: reference_db
 
     script:
     """
     wget https://mothur.s3.us-east-2.amazonaws.com/wiki/silva.bacteria.zip
-    unzip *.zip && echo */*.bacteria.fasta > reference_db
-
+    unzip silva.bacteria.zip
+    mv silva.bacteria reference_db
     """
 }
 
-/*
-
-Process 3b: Chimera Detection --Tool: usearch
-
-*/
+// Process 3c: Chimera Detection --Tool: usearch
 
 process CHIMERA_DETECTION {
     publishDir "$outdir/chimera", mode: 'copy'
 
     input:
-        merged_reads
-        reference_db
-        merged_reads_dir
+        path merged_reads
+        path reference_db
 
     output:
         path 'chimera_out.fastq', emit: chimera_out_fastq
