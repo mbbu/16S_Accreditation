@@ -43,13 +43,13 @@ process CHIMERA_DETECTION {
 
     script:
     """
-    usearch -uchime2_ref $merged_reads -db $reference_db/*.fasta \
+    usearch -uchime2_ref $merged_reads -db $reference_db \
     -uchimeout chimera_out.fastq -strand plus -mode sensitive
 
-    usearch -orient $merged_reads_dir -db $reference_db/*.fasta \
+    usearch -orient $merged_reads -db $reference_db \
     -fastqout oriented.fastq -tabbedout orient.txt
 
-    usearch -fastq_filter oriented_fastq fastq_maxee 1.0 -fastqout filtered.fastq
+    usearch -fastq_filter oriented.fastq fastq_maxee 1.0 -fastqout filtered.fastq
 
     usearch -fastx_uniques filtered.fastq -fastqout uniques.fastq -sizeout -relabel Uniq
 
@@ -57,9 +57,9 @@ process CHIMERA_DETECTION {
 
     usearch -unoise3 uniques.fastq -zotus zotus.fastq
 
-    usearch -otutab merged_reads -otus otus.fastq -otutabout otutab.txt -mapout map.txt
+    usearch -otutab $merged_reads -otus otus.fastq -otutabout otutab.txt -mapout map.txt
 
-    usearch -otutab merged_reads -zotus zotus.fastq -otutabout zotutab.txt -mapout zmap.txt
+    usearch -otutab $merged_reads -zotus zotus.fastq -otutabout zotutab.txt -mapout zmap.txt
     """
 
 }
