@@ -4,12 +4,6 @@
 
 nextflow.enable.dsl = 2
 
-//Define default parameters
-//TODO: Move params to config file when done
-
-params.reads = "/home/festo/Documents/test_data/*_R{1,2}.fastq.gz"
-params.outdir = "Results"
-
 //Import modules here
 
 include { FASTQC; TRIMMOMATIC; POST_FASTQC } from "./modules/qc.nf" addParams(outdir: "${params.outdir}")
@@ -43,20 +37,20 @@ workflow{
     CHIMERA_DETECTION(USEARCH_MERGE.out, REFERENCE_DB.out)
     
     // PART FOUR
-	// step 1
-	input_ch = channel.fromPath(params.otufastq)
-	OTU_conversion(input_ch)
-	// step 2
-	MAFFT_alignment(OTU_conversion.out)			
-	// step 3
-	Masking(MAFFT_alignment.out)	
-	// step 4
-	Phylogenetic_Tree(Masking.out)
-	// step 5
-	Midpoint_root(Phylogenetic_Tree.out)
-	// step 6
-	inp_ch = channel.fromPath(params.otu_txt)
-	OTUtable_to_QiimeArtifact(inp_ch)
+    // step 1
+    input_ch = channel.fromPath(params.otufastq)
+    OTU_conversion(input_ch)
+    // step 2
+    MAFFT_alignment(OTU_conversion.out)			
+    // step 3
+    Masking(MAFFT_alignment.out)	
+    // step 4
+    Phylogenetic_Tree(Masking.out)
+    // step 5
+    Midpoint_root(Phylogenetic_Tree.out)
+    // step 6
+    inp_ch = channel.fromPath(params.otu_txt)
+    OTUtable_to_QiimeArtifact(inp_ch)
     //step 7
     Feature_Table(OTUtable_to_QiimeArtifact.out)	
     
