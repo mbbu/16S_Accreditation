@@ -29,7 +29,7 @@ process TRIMMOMATIC {
     tuple val(sample_id), path(reads)
 
     output:
-    tuple val(sample_id), path(fq_1_paired), path(fq_2_paired)
+    tuple path(fq_1_paired), path(fq_2_paired)
 
     script:
     fq_1_paired = sample_id + '_R1.paired.fastq'
