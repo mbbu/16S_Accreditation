@@ -1,39 +1,28 @@
-#! /usr/bin/env nextflow
-
-//Enable DSL 2 syntax
-
 nextflow.enable.dsl = 2
 
-//Define default parameters
-//TODO: Move params to config file when done
+include {OTU_conversion; MAFFT_alignment; Masking; Phylogenetic_Tree; Midpoint_root; OTUtable_to_QiimeArtifact; Feature_Table}from './nextflow.nf' 
 
-params.reads = "/home/festo/Documents/test_data/*_R{1,2}.fastq.gz"
-params.outdir = "Results"
+workflow {
+	// step 1
+	input_ch = channel.fromPath(params.otufastq)
+	OTU_conversion(input_ch)
 
-//Import modules here
+	// step 2
+	MAFFT_alignment(OTU_conversion.out)			
+	
+	// step 3
+	Masking(MAFFT_alignment.out)	
+	
+	// step 4
+	Phylogenetic_Tree(Masking.out)
 
-include { FASTQC; TRIMMOMATIC; POST_FASTQC } from "./modules/qc.nf" addParams(outdir: "${params.outdir}")
-include { USEARCH_MERGE; CHIMERA_DETECTION; REFERENCE_DB } from "./modules/chimeras.nf"
+	// step 5
+	Midpoint_root(Phylogenetic_Tree.out)
 
-// Set the channel for the inputs
-Channel
-    .fromFilePairs( params.reads, checkExists:true )
-    .set{ read_pairs_ch }
-
-//Run the main workflow below:
-
-workflow{
-    // process 1a
-    //FASTQC(read_pairs_ch)
-    // process 1b
-    TRIMMOMATIC(read_pairs_ch)
-    // process 1c
-    POST_FASTQC(TRIMMOMATIC.out)
-    //process 3a merge reads
-    USEARCH_MERGE(TRIMMOMATIC.out.collect())
-    // process 3a Get Reference DB
-    //TODO: move database as an input parameter
-    REFERENCE_DB()
-    // process 3b
-    CHIMERA_DETECTION(USEARCH_MERGE.out, REFERENCE_DB.out)
+	// step 6
+	inp_ch = channel.fromPath(params.otu_txt)
+	OTUtable_to_QiimeArtifact(inp_ch)
+	
+        //step 7
+         Feature_Table(OTUtable_to_QiimeArtifact.out)			
 }
