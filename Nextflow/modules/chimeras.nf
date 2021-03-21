@@ -1,7 +1,7 @@
 // Enable DSL 2 syntax
 nextflow.enable.dsl = 2
 
-// Process 3a: Merge the reads
+// Process 2: Merge the reads
 process USEARCH_MERGE {
     publishDir path: { "${params.outdir}/merge" }
     input:
@@ -34,7 +34,7 @@ process USEARCH_MERGE {
     """
 }
 
-// Process 3b: Reference_db --Tool: wget
+// Process 3a: Reference_db --Tool: wget
 process REFERENCE_DB{
     publishDir path: { "${params.outdir}/database" }
 
@@ -49,7 +49,7 @@ process REFERENCE_DB{
     """
 }
 
-// Process 3c: Chimera Detection --Tool: usearch
+// Process 3b: Chimera Detection --Tool: usearch
 process CHIMERA_DETECTION {
     publishDir "$outdir/chimera", mode: 'copy'
 
