@@ -24,9 +24,9 @@ workflow{
     TRIMMOMATIC(read_pairs_ch)
     // process 1c
     POST_FASTQC(TRIMMOMATIC.out)
-    //process 3a merge reads
     
     // PART TWO
+    // process 2 merge reads
     USEARCH_MERGE(TRIMMOMATIC.out.collect())
     // process 3a Get Reference DB
     //TODO: move database as an input parameter
