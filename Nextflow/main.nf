@@ -52,7 +52,6 @@ workflow{
     FEATURE_TABLE(OTUTABLE_TO_ARTIFACT.out)
 
     //VISUALIZATION
-
     // step 0: Intro_diversity
     medata_ch = Channel.fromPath(params.metadata)
     INTRO_DIVERSITY(FEATURE_TABLE.out.combine(medata_ch)
