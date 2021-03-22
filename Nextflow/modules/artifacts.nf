@@ -19,8 +19,8 @@ process OTU_CONVERSION {
 	"""
 }
 
-// Process 4(ii): MAFFT alignment
-process MAFFT_ALIGNMENT {
+// Process 4(ii): MAFFT alignment, Masking Aligned OTUS, Generating a Phylogenetic Tree and Mid-point rooting of the phylogenetic tree
+process MAFFT_ALIGNMENT_PLUS {
 	tag "Running MAFFT_alignment"
 	publishDir path: { "${params.outdir}/artifacts" }
 
@@ -29,15 +29,28 @@ process MAFFT_ALIGNMENT {
 
 	output:
 	file(aligned)
+	file(masked)
+	file(unrooted_tree)
+	file(rooted)
 
 	script:
 	aligned = "aligned_otus.qza"
-	"""
-	qiime alignment mafft --i-sequences ${otus_out} --o-alignment ${aligned}
+	masked = "masked_aligned_otus.qza"
+	unrooted_tree = 'unrooted_tree.qza'
+	rooted = "rooted_tree.qza"
 
+	"""
+	qiime phylogeny align-to-tree-mafft-fasttree \
+		--i-sequences ${otus_out} \
+		--o-alignment ${aligned} \
+		--o-masked-alignment ${masked} \
+		--o-tree ${unrooted_tree} \
+		--o-rooted-tree ${rooted}
 	"""
 }
 
+// All block hashed done with process above.
+/*
 // Process 4(iii): Masking Aligned OTUS
 process MASKING {
 	tag " masking_aligned_otus"
@@ -91,8 +104,9 @@ process MIDPOINT_ROOTING {
 	qiime phylogeny midpoint-root --i-tree ${unrooted_tree} --o-rooted-tree ${rooted}
 	"""
 }
+*/
 
-// Process 4(vi): Converting the OTU Table to Qiime Artifact
+// Process 4(iii): Converting the OTU Table to Qiime Artifact
 process OTUTABLE_TO_ARTIFACT {
 	tag "Converting OTU Table:"
   	publishDir path: { "${params.outdir}/artifacts" }
@@ -110,7 +124,7 @@ process OTUTABLE_TO_ARTIFACT {
   """
 }
 
-// Process 4(vi.2): Generating Feature Table
+// Process 4(iii.2): Generating Feature Table
 process FEATURE_TABLE {
 	tag "Generating Feature Table"
 	publishDir path: { "${params.outdir}/artifacts" }
