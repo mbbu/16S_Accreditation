@@ -51,24 +51,21 @@ workflow{
     //step 7
     FEATURE_TABLE(OTUTABLE_TO_ARTIFACT.out)
 
-    // PART FIVE
-    // DATA VISUALIZATION
+    //VISUALIZATION
+
+    // step 0: Intro_diversity
+    medata_ch = Channel.fromPath(params.metadata)
+    intro_diversity(FEATURE_TABLE.out.combine(medata_ch)
+
     // step 1: Alpha diversity
-    //al_vector_ch = Channel.fromPath(params.evennessvector)
-    //mdata_ch = Channel.fromPath(params.metadata)
-    //alpha_out_ch = al_vector_ch.combine(mdata_ch)
-    //alpha_diversity(alpha_out_ch)
+    mdata_ch = Channel.fromPath(params.metadata)
+    alpha_diversity(intro_diversity.out.combine(mdata_ch))
 
-     // step2: Shannon diversity
-     //sh_vector_ch = Channel.fromPath(params.shannonvector)
-     //metad_ch = Channel.fromPath(params.metadata)
-     //shannon_out_ch = sh_vector_ch.combine(metad_ch)
+    // step2: Shannon diversity
+    metad_ch = Channel.fromPath(params.metadata)
+    shannon_diversity(intro_diversity.out.combine(metad_ch))
 
-     // step3: Beta diversity
-     //bt_vector_ch = Channel.fromPath(params.betavector)
-     //data_ch = Channel.fromPath(params.metadata)
-     //beta_out_ch = bt_vector_ch.combine(data_ch)
-     //beta_diversity(beta_out_ch)
-
-
+    // step3: Beta diversity
+    data_ch = Channel.fromPath(params.metadata)
+    beta_diversity(intro_diversity.out.combine(data_ch))
 }
