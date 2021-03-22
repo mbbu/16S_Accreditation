@@ -9,7 +9,7 @@ include { FASTQC; TRIMMOMATIC; POST_FASTQC } from "./modules/qc.nf" addParams(ou
 include { USEARCH_MERGE; CHIMERA_DETECTION; REFERENCE_DB } from "./modules/chimeras.nf" addParams(outdir: "${params.outdir}")
 include { OTU_CONVERSION; MAFFT_ALIGNMENT; MASKING; PHYLOGENY; MIDPOINT_ROOTING; OTUTABLE_TO_ARTIFACT;
           FEATURE_TABLE} from './modules/artifacts.nf' addParams(outdir: "${params.outdir}")
-include { intro_diversity; alpha_diversity; shannon_diversity ; beta_diversity }from './modules/visualization.nf'
+include { INTRO_DIVERSITY; ALPHA_DIVERSITY; SHANNON_DIVERSITY ; BETA_DIVERSITY }from './modules/visualization.nf'
 
 
 // set the reads channel
@@ -55,17 +55,17 @@ workflow{
 
     // step 0: Intro_diversity
     medata_ch = Channel.fromPath(params.metadata)
-    intro_diversity(FEATURE_TABLE.out.combine(medata_ch)
+    INTRO_DIVERSITY(FEATURE_TABLE.out.combine(medata_ch)
 
     // step 1: Alpha diversity
     mdata_ch = Channel.fromPath(params.metadata)
-    alpha_diversity(intro_diversity.out.combine(mdata_ch))
+    ALPHA_DIVERSITY(INTRO_DIVERSITY.out.combine(mdata_ch))
 
     // step2: Shannon diversity
     metad_ch = Channel.fromPath(params.metadata)
-    shannon_diversity(intro_diversity.out.combine(metad_ch))
+    SHANNON_DIVERSITY(INTRO_DIVERSITY.out.combine(metad_ch))
 
     // step3: Beta diversity
     data_ch = Channel.fromPath(params.metadata)
-    beta_diversity(intro_diversity.out.combine(data_ch))
+    BETA_DIVERSITY(INTRO_DIVERSITY.out.combine(data_ch))
 }
