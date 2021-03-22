@@ -9,7 +9,7 @@ include { FASTQC; TRIMMOMATIC; POST_FASTQC } from "./modules/qc.nf" addParams(ou
 include { USEARCH_MERGE; CHIMERA_DETECTION; REFERENCE_DB } from "./modules/chimeras.nf" addParams(outdir: "${params.outdir}")
 include { OTU_CONVERSION; MAFFT_ALIGNMENT; MASKING; PHYLOGENY; MIDPOINT_ROOTING; OTUTABLE_TO_ARTIFACT;
           FEATURE_TABLE} from './modules/artifacts.nf' addParams(outdir: "${params.outdir}")
-//include { alpha_diversity; shannon_diversity ; beta_diversity }from './modules/visualization.nf'
+include { intro_diversity; alpha_diversity; shannon_diversity ; beta_diversity }from './modules/visualization.nf'
 
 
 // set the reads channel
