@@ -1,6 +1,6 @@
 #!/home/nanjala/miniconda3/envs/qiime2-2020.8/bin/nextflow
 
-process intro_diversity {
+process INTRO_DIVERSITY {
   tag "Introduction to diversity"
   publishDir "$params.outdir"
   
@@ -16,8 +16,8 @@ process intro_diversity {
     """
 }
 
-process alpha_diversity {
-  tag "alpha_diversity"
+process ALPHA_DIVERSITY {
+  tag " evaluate alpha_diversity"
   publishDir "$params.outdir"
 
   input:
@@ -35,8 +35,8 @@ process alpha_diversity {
 }
 
 
-process shannon_diversity {
-  tag "shannon_diversity"
+process SHANNON_DIVERSITY {
+  tag "evaluate shannon_diversity"
   publishDir "$params.outdir"
 
   input:
@@ -52,8 +52,8 @@ process shannon_diversity {
     """
 }
 
-process beta_diversity {
-  tag "beta_diversity"
+process BETA_DIVERSITY {
+  tag "evaluate beta_diversity"
   publishDir "$params.outdir"
 
   input:
