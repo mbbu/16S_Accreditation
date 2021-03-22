@@ -1,12 +1,10 @@
- 
-/*
-Process 4(i): Conversion of OTUS into Qiime2 Artifact
-*/
+#! /usr/bin/env nextflow
 
-process OTU_conversion {
+// Process 4(i): Conversion of OTUS into Qiime2 Artifact
+process OTU_CONVERSION {
 	tag "OTU conversion"
 
-	publishDir '$params.output_dir'
+	publishDir path: { "${params.outdir}/artifacts" }
 
 	input:
 	file(otus)
@@ -15,23 +13,16 @@ process OTU_conversion {
 	file(otus_conv)
 
 	script:
-
 	otus_conv = "otus.qza"
-
 	"""
 	qiime tools import --input-path ${otus} --output-path ${otus_conv} --type 'FeatureData[Sequence]'
 	"""
 }
 
-
-/*
-Process 4(ii): MAFFT alignment
-*/
-
-process MAFFT_alignment {
+// Process 4(ii): MAFFT alignment
+process MAFFT_ALIGNMENT {
 	tag "Running MAFFT_alignment"
-
-	publishDir '$params.output_dir'
+	publishDir path: { "${params.outdir}/artifacts" }
 
 	input:
 	file(otus_out)
@@ -40,24 +31,17 @@ process MAFFT_alignment {
 	file(aligned)
 
 	script:
-
 	aligned = "aligned_otus.qza"
-
 	"""
 	qiime alignment mafft --i-sequences ${otus_out} --o-alignment ${aligned}
 
 	"""
 }
 
-/*
-Process 4(iii): Masking Aligned OTUS
-*/
-
-process Masking {
-
+// Process 4(iii): Masking Aligned OTUS
+process MASKING {
 	tag " masking_aligned_otus"
-
-	publishDir "$params.output_dir"
+  publishDir path: { "${params.outdir}/artifacts" }
 
 	input:
 	file(aligned_otus)
@@ -66,24 +50,16 @@ process Masking {
 	file(masked)
 
 	script:
-
 	masked = "masked_aligned_otus.qza"
-
 	"""
 	qiime alignment mask --i-alignment ${aligned_otus} --o-masked-alignment ${masked}
-
 	"""
 }
 
-
-/*
-Process 4(iv): Generating a Phylogenetic Tree
-*/
-
-process Phylogenetic_Tree {
+// Process 4(iv): Generating a Phylogenetic Tree
+process PHYLOGENY {
 	tag "Generating a Phylogenetic Tree"
-
-	publishDir = "$params.output_dir"
+  publishDir path: { "${params.outdir}/artifacts" }
 
 	input:
 	file(masked_output)
@@ -92,21 +68,16 @@ process Phylogenetic_Tree {
 	file(unrooted_tree)
 
 	script:
-
 	unrooted_tree = 'unrooted_tree.qza'
-
 	"""
 	qiime phylogeny fasttree --i-alignment ${masked_output} --o-tree ${unrooted_tree}
-
 	"""
 }
 
-/* Process 4(v):Mid-point rooting of the phylogenetic tree
-*/
-process Midpoint_root {
+// Process 4(v):Mid-point rooting of the phylogenetic tree
+process MIDPOINT_ROOTING {
 	tag "Mid-point rooting of the phylogenetic tree"
-
-	publishDir "$params.output_dir"
+  publishDir path: { "${params.outdir}/artifacts" }
 
 	input:
 	file(unrooted_tree)
@@ -115,24 +86,16 @@ process Midpoint_root {
 	file(rooted)
 
 	script:
-
 	rooted = "rooted_tree.qza"
-
 	"""
 	qiime phylogeny midpoint-root --i-tree ${unrooted_tree} --o-rooted-tree ${rooted}
-	
 	"""
 }
 
-/*
-Process 4(vi): Converting the OTU Table to Qiime Artifact
-*/
-
-process OTUtable_to_QiimeArtifact{
-
+// Process 4(vi): Converting the OTU Table to Qiime Artifact
+process OTUTABLE_TO_ARTIFACT {
 	tag "Converting OTU Table:"
-
-	publishDir "$params.output_dir"
+  publishDir path: { "${params.outdir}/artifacts" }
 
 	input:
 	file(otu_table)
@@ -141,63 +104,43 @@ process OTUtable_to_QiimeArtifact{
 	file(otubiomtable)
 
 	script:
-
 	otubiomtable = "otu_table.from_txt_hdf5.biom"
-
 	"""
 	biom convert -i ${otu_table} -o ${otubiomtable} --table-type="OTU table" --to-hdf5
-        
-        """
+  """
 }
 
+// Process 4(vi.2): Generating Feature Table
+process FEATURE_TABLE {
+  tag "Generating Feature Table"
+  publishDir path: { "${params.outdir}/artifacts" }
 
-/*
-Process 4(vi.2): Generating Feature Table
-*/
+  input:
+  file(feature_tab)
 
-process Feature_Table{
-    tag "Generating Feature Table"
+  output:
+  file(otutab_out)
 
-    publishDir "$params.output_dir"
-
-    input:
-    file(feature_tab)
-
-    output:
-    file(otutab_out)
-
-    script:
-
-    otutab_out = "otu_tab.qza"
-    
-    """
-    qiime tools import --input-path ${feature_tab} --type 'FeatureTable[Frequency]' --output-path ${otutab_out}
-    """
+  script:
+  otutab_out = "otu_tab.qza"
+  """
+  qiime tools import --input-path ${feature_tab} --type 'FeatureTable[Frequency]' --output-path ${otutab_out}
+  """
 }
 
+// Process 4(vii): Alpha and Beta Diversity Analysis
+process DIVERSITY_ANALYSIS {
+  tag "Running Diversity Analysis:"
+  publishDir path: { "${params.outdir}/artifacts" }
 
-/*
-Process 4(vii): Alpha and Beta Diversity Analysis
-*/
+  input:
+  file(OTUtabs)
 
-process Diversity_Analysis {
-
-    tag "Running Diversity Analysis:"
-
-    publishDir "$params.output_dir"
-
-    input:
-    file(OTUtabs)
-
-
-    script:
-
-    meta.data = "practice.dataset1.metadata.tsv"
-
-    """
-    qiime diversity core-metrics --i-table ${OTUtabs} --p-sampling-depth 4000 --m-metadata-file ${meta.data} --output-dir core-metrics-results
-        
-    """ 
-} 
-
-
+  script:
+  meta.data = "practice.dataset1.metadata.tsv"
+  """
+  qiime diversity core-metrics --i-table ${OTUtabs} \
+    --p-sampling-depth 4000 --m-metadata-file ${meta.data} \
+    --output-dir core-metrics-results
+  """
+}

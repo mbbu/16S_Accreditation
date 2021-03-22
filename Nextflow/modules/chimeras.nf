@@ -51,7 +51,7 @@ process REFERENCE_DB{
 
 // Process 3b: Chimera Detection --Tool: usearch
 process CHIMERA_DETECTION {
-    publishDir "$outdir/chimera", mode: 'copy'
+    publishDir path: { "${params.outdir}/chimera" }
 
     input:
         path merged_reads
@@ -77,9 +77,9 @@ process CHIMERA_DETECTION {
     -uchimeout chimera_out.fastq -strand plus -mode sensitive
 
     usearch -orient $merged_reads -db $reference_db \
-    -fastqout oriented.fastq -tabbedout orient.txt
+    -fastqout oriented.fastq -tabbedout oriented.txt
 
-    usearch -fastq_filter oriented.fastq fastq_maxee 1.0 -fastqout filtered.fastq
+    usearch -fastq_filter oriented.fastq -fastq_maxee 1.0 -fastqout filtered.fastq
 
     usearch -fastx_uniques filtered.fastq -fastqout uniques.fastq -sizeout -relabel Uniq
 
