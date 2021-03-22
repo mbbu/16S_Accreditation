@@ -41,7 +41,7 @@ process MAFFT_ALIGNMENT {
 // Process 4(iii): Masking Aligned OTUS
 process MASKING {
 	tag " masking_aligned_otus"
-  publishDir path: { "${params.outdir}/artifacts" }
+  	publishDir path: { "${params.outdir}/artifacts" }
 
 	input:
 	file(aligned_otus)
@@ -59,7 +59,7 @@ process MASKING {
 // Process 4(iv): Generating a Phylogenetic Tree
 process PHYLOGENY {
 	tag "Generating a Phylogenetic Tree"
-  publishDir path: { "${params.outdir}/artifacts" }
+  	publishDir path: { "${params.outdir}/artifacts" }
 
 	input:
 	file(masked_output)
@@ -77,7 +77,7 @@ process PHYLOGENY {
 // Process 4(v):Mid-point rooting of the phylogenetic tree
 process MIDPOINT_ROOTING {
 	tag "Mid-point rooting of the phylogenetic tree"
-  publishDir path: { "${params.outdir}/artifacts" }
+  	publishDir path: { "${params.outdir}/artifacts" }
 
 	input:
 	file(unrooted_tree)
@@ -95,7 +95,7 @@ process MIDPOINT_ROOTING {
 // Process 4(vi): Converting the OTU Table to Qiime Artifact
 process OTUTABLE_TO_ARTIFACT {
 	tag "Converting OTU Table:"
-  publishDir path: { "${params.outdir}/artifacts" }
+  	publishDir path: { "${params.outdir}/artifacts" }
 
 	input:
 	file(otu_table)
@@ -112,35 +112,18 @@ process OTUTABLE_TO_ARTIFACT {
 
 // Process 4(vi.2): Generating Feature Table
 process FEATURE_TABLE {
-  tag "Generating Feature Table"
-  publishDir path: { "${params.outdir}/artifacts" }
+	tag "Generating Feature Table"
+	publishDir path: { "${params.outdir}/artifacts" }
 
-  input:
-  file(feature_tab)
+	input:
+	file(feature_tab)
 
-  output:
-  file(otutab_out)
+	output:
+	file(otutab_out)
 
-  script:
-  otutab_out = "otu_tab.qza"
-  """
-  qiime tools import --input-path ${feature_tab} --type 'FeatureTable[Frequency]' --output-path ${otutab_out}
-  """
-}
-
-// Process 4(vii): Alpha and Beta Diversity Analysis
-process DIVERSITY_ANALYSIS {
-  tag "Running Diversity Analysis:"
-  publishDir path: { "${params.outdir}/artifacts" }
-
-  input:
-  file(OTUtabs)
-
-  script:
-  meta.data = "practice.dataset1.metadata.tsv"
-  """
-  qiime diversity core-metrics --i-table ${OTUtabs} \
-    --p-sampling-depth 4000 --m-metadata-file ${meta.data} \
-    --output-dir core-metrics-results
-  """
+	script:
+	otutab_out = "otu_tab.qza"
+	"""
+	  qiime tools import --input-path ${feature_tab} --type 'FeatureTable[Frequency]' --output-path ${otutab_out}
+	"""
 }
