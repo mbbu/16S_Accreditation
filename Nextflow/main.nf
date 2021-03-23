@@ -1,4 +1,4 @@
-#! /usr/bin/env nextflow
+#!/opt/apps/nextflow/20.10.0/bin/nextflow
 
 //Enable DSL 2 syntax
 nextflow.enable.dsl = 2
@@ -13,8 +13,7 @@ include { INTRO_DIVERSITY; ALPHA_DIVERSITY; SHANNON_DIVERSITY ; BETA_DIVERSITY }
 
 
 // set the reads channel
-Channel
-    .fromFilePairs( params.reads, checkExists:true )
+Channel.fromFilePairs( params.reads, checkExists:true )
     .set{ read_pairs_ch }
 
 //Run the main workflow below:
@@ -25,7 +24,7 @@ workflow{
     // process 1b
     TRIMMOMATIC(read_pairs_ch)
     // process 1c
-    //POST_FASTQC(TRIMMOMATIC.out)
+    // POST_FASTQC(TRIMMOMATIC.out)
     
     // process 2 merge reads
     USEARCH_MERGE(TRIMMOMATIC.out.collect())
@@ -54,7 +53,7 @@ workflow{
     //VISUALIZATION
     // step 0: Intro_diversity
     medata_ch = Channel.fromPath(params.metadata)
-    INTRO_DIVERSITY(FEATURE_TABLE.out.combine(medata_ch)
+    INTRO_DIVERSITY(FEATURE_TABLE.out.combine(medata_ch))
 
     // step 1: Alpha diversity
     mdata_ch = Channel.fromPath(params.metadata)

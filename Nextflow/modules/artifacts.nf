@@ -3,7 +3,6 @@
 // Process 4(i): Conversion of OTUS into Qiime2 Artifact
 process OTU_CONVERSION {
 	tag "OTU conversion"
-
 	publishDir path: { "${params.outdir}/artifacts" }
 
 	input:
@@ -107,7 +106,7 @@ process OTUTABLE_TO_ARTIFACT {
 	otubiomtable = "otu_table.from_txt_hdf5.biom"
 	"""
 	biom convert -i ${otu_table} -o ${otubiomtable} --table-type="OTU table" --to-hdf5
-  """
+  	"""
 }
 
 // Process 4(vi.2): Generating Feature Table

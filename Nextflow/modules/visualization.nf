@@ -2,7 +2,7 @@
 
 process INTRO_DIVERSITY {
   tag "Introduction to diversity"
-  publishDir "$params.outdir"
+  publishDir path: { "${params.outdir}/visualization" }
   
   input:
     tuple val(otu_tab), file(medata)
@@ -18,7 +18,7 @@ process INTRO_DIVERSITY {
 
 process ALPHA_DIVERSITY {
   tag " evaluate alpha_diversity"
-  publishDir "$params.outdir"
+  publishDir path: { "${params.outdir}/visualization" }
 
   input:
     tuple val(vector), file(mdata)
@@ -37,7 +37,7 @@ process ALPHA_DIVERSITY {
 
 process SHANNON_DIVERSITY {
   tag "evaluate shannon_diversity"
-  publishDir "$params.outdir"
+  publishDir path: { "${params.outdir}/visualization" }
 
   input:
     tuple val(shvector), file(shmdata)
@@ -54,7 +54,7 @@ process SHANNON_DIVERSITY {
 
 process BETA_DIVERSITY {
   tag "evaluate beta_diversity"
-  publishDir "$params.outdir"
+  publishDir path: { "${params.outdir}/visualization" }
 
   input:
     tuple val(btvector), file(btmdata)

@@ -4,6 +4,8 @@ nextflow.enable.dsl = 2
 // Process 2: Merge the reads
 process USEARCH_MERGE {
     publishDir path: { "${params.outdir}/merge" }
+    tag "Merging reads"
+
     input:
     path (fastq)
 
@@ -31,12 +33,14 @@ process USEARCH_MERGE {
 
     # Clean up
     cd .. && rm -rf u_merge
+    
     """
 }
 
 // Process 3a: Reference_db --Tool: wget
 process REFERENCE_DB{
     publishDir path: { "${params.outdir}/database" }
+    tag "Generating the reference database"
 
     output:
     path 'reference_db/silva.bacteria.fasta', emit: reference_db
@@ -52,6 +56,7 @@ process REFERENCE_DB{
 // Process 3b: Chimera Detection --Tool: usearch
 process CHIMERA_DETECTION {
     publishDir path: { "${params.outdir}/chimera" }
+    tag "Chimera detection"
 
     input:
         path merged_reads
@@ -90,6 +95,7 @@ process CHIMERA_DETECTION {
     usearch -otutab $merged_reads -otus otus.fastq -otutabout otutab.txt -mapout map.txt
 
     usearch -otutab $merged_reads -zotus zotus.fastq -otutabout zotutab.txt -mapout zmap.txt
+    
     """
 
 }

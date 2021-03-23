@@ -6,7 +6,8 @@ nextflow.enable.dsl = 2
 
 process FASTQC {
     publishDir path: { "${params.outdir}/fastqc_raw" }
-
+    tag "Quality checking raw reads"
+    
     input:
     tuple val(sample_id), path(reads)
 
@@ -17,6 +18,7 @@ process FASTQC {
     """
     mkdir ${sample_id}_logs
     fastqc -o ${sample_id}_logs -f fastq -q ${reads}
+    
     """
 }
 
@@ -24,6 +26,7 @@ process FASTQC {
 
 process TRIMMOMATIC {
     publishDir path: { "${params.outdir}/trimming" }
+    tag "Trimming raw reads"
 
     input:
     tuple val(sample_id), path(reads)
@@ -53,6 +56,7 @@ process TRIMMOMATIC {
 // Process 1c: Post trimming QC
 process POST_FASTQC {
     publishDir path: { "${params.outdir}/fastqc_post" }
+    tag "Quality check trimmed reads"
 
     input:
     tuple val(sample_id), path(read_R1), path(read_R2)
