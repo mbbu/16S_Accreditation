@@ -24,13 +24,13 @@ workflow{
     // process 1b
     TRIMMOMATIC(read_pairs_ch)
     // process 1c
-<<<<<<< HEAD
+// <<<<<<< HEAD
     // POST_FASTQC(TRIMMOMATIC.out)
     
-=======
+// =======
     //POST_FASTQC(TRIMMOMATIC.out)
 
->>>>>>> d753658dc1583d86b0216075a763015e526230be
+// >>>>>>> d753658dc1583d86b0216075a763015e526230be
     // process 2 merge reads
     USEARCH_MERGE(TRIMMOMATIC.out.collect())
     // process 3a Get Reference DB

@@ -1,0 +1,190 @@
+digraph "pipeline_dag" {
+p0 [shape=point,label="",fixedsize=true,width=0.1,xlabel="Channel.fromFilePairs"];
+p1 [label="FASTQC"];
+p0 -> p1 [label="read_pairs_ch"];
+
+p1 [label="FASTQC"];
+p2 [shape=point];
+p1 -> p2;
+
+p0 [shape=point,label="",fixedsize=true,width=0.1,xlabel="Channel.fromFilePairs"];
+p3 [label="TRIMMOMATIC"];
+p0 -> p3 [label="read_pairs_ch"];
+
+p3 [label="TRIMMOMATIC"];
+p4 [shape=circle,label="",fixedsize=true,width=0.1,xlabel="collect"];
+p3 -> p4;
+
+p4 [shape=circle,label="",fixedsize=true,width=0.1,xlabel="collect"];
+p5 [label="USEARCH_MERGE"];
+p4 -> p5;
+
+p5 [label="USEARCH_MERGE"];
+p7 [label="CHIMERA_DETECTION"];
+p5 -> p7;
+
+p6 [label="REFERENCE_DB"];
+p7 [label="CHIMERA_DETECTION"];
+p6 -> p7;
+
+p7 [label="CHIMERA_DETECTION"];
+p17 [shape=point];
+p7 -> p17;
+
+p7 [label="CHIMERA_DETECTION"];
+p16 [shape=point];
+p7 -> p16;
+
+p7 [label="CHIMERA_DETECTION"];
+p15 [shape=point];
+p7 -> p15;
+
+p7 [label="CHIMERA_DETECTION"];
+p14 [shape=point];
+p7 -> p14;
+
+p7 [label="CHIMERA_DETECTION"];
+p13 [shape=point];
+p7 -> p13;
+
+p7 [label="CHIMERA_DETECTION"];
+p18 [label="OTU_CONVERSION"];
+p7 -> p18;
+
+p7 [label="CHIMERA_DETECTION"];
+p12 [shape=point];
+p7 -> p12;
+
+p7 [label="CHIMERA_DETECTION"];
+p11 [shape=point];
+p7 -> p11;
+
+p7 [label="CHIMERA_DETECTION"];
+p24 [label="OTUTABLE_TO_ARTIFACT"];
+p7 -> p24;
+
+p7 [label="CHIMERA_DETECTION"];
+p10 [shape=point];
+p7 -> p10;
+
+p7 [label="CHIMERA_DETECTION"];
+p9 [shape=point];
+p7 -> p9;
+
+p7 [label="CHIMERA_DETECTION"];
+p8 [shape=point];
+p7 -> p8;
+
+p18 [label="OTU_CONVERSION"];
+p19 [label="MAFFT_ALIGNMENT_PLUS"];
+p18 -> p19 [label="otus_conv"];
+
+p19 [label="MAFFT_ALIGNMENT_PLUS"];
+p23 [shape=point];
+p19 -> p23 [label="aligned"];
+
+p19 [label="MAFFT_ALIGNMENT_PLUS"];
+p22 [shape=point];
+p19 -> p22 [label="masked"];
+
+p19 [label="MAFFT_ALIGNMENT_PLUS"];
+p21 [shape=point];
+p19 -> p21 [label="unrooted_tree"];
+
+p19 [label="MAFFT_ALIGNMENT_PLUS"];
+p20 [shape=point];
+p19 -> p20 [label="rooted"];
+
+p24 [label="OTUTABLE_TO_ARTIFACT"];
+p25 [label="FEATURE_TABLE"];
+p24 -> p25 [label="otubiomtable"];
+
+p25 [label="FEATURE_TABLE"];
+p29 [shape=circle,label="",fixedsize=true,width=0.1,xlabel="combine"];
+p25 -> p29 [label="otutab_out"];
+
+p26 [shape=point,label="",fixedsize=true,width=0.1,xlabel="Channel.fromPath"];
+p27 [shape=point];
+p26 -> p27 [label="medata_ch"];
+
+p28 [shape=point,label="",fixedsize=true,width=0.1];
+p29 [shape=circle,label="",fixedsize=true,width=0.1,xlabel="combine"];
+p28 -> p29;
+
+p29 [shape=circle,label="",fixedsize=true,width=0.1,xlabel="combine"];
+p30 [label="INTRO_DIVERSITY"];
+p29 -> p30;
+
+p30 [label="INTRO_DIVERSITY"];
+p35 [shape=circle,label="",fixedsize=true,width=0.1,xlabel="combine"];
+p30 -> p35 [label="otu_out"];
+
+p31 [shape=point,label="",fixedsize=true,width=0.1,xlabel="Channel.fromPath"];
+p32 [shape=point];
+p31 -> p32 [label="mdata_ch"];
+
+p33 [shape=point,label="",fixedsize=true,width=0.1];
+p35 [shape=circle,label="",fixedsize=true,width=0.1,xlabel="combine"];
+p33 -> p35;
+
+p34 [shape=point,label="",fixedsize=true,width=0.1];
+p35 [shape=circle,label="",fixedsize=true,width=0.1,xlabel="combine"];
+p34 -> p35;
+
+p35 [shape=circle,label="",fixedsize=true,width=0.1,xlabel="combine"];
+p36 [label="ALPHA_DIVERSITY"];
+p35 -> p36;
+
+p36 [label="ALPHA_DIVERSITY"];
+p37 [shape=point];
+p36 -> p37 [label="alpha_out"];
+
+p38 [shape=point,label="",fixedsize=true,width=0.1,xlabel="Channel.fromPath"];
+p39 [shape=point];
+p38 -> p39 [label="metad_ch"];
+
+p40 [shape=point,label="",fixedsize=true,width=0.1];
+p42 [shape=circle,label="",fixedsize=true,width=0.1,xlabel="combine"];
+p40 -> p42;
+
+p30 [label="INTRO_DIVERSITY"];
+p42 [shape=circle,label="",fixedsize=true,width=0.1,xlabel="combine"];
+p30 -> p42;
+
+p41 [shape=point,label="",fixedsize=true,width=0.1];
+p42 [shape=circle,label="",fixedsize=true,width=0.1,xlabel="combine"];
+p41 -> p42;
+
+p42 [shape=circle,label="",fixedsize=true,width=0.1,xlabel="combine"];
+p43 [label="SHANNON_DIVERSITY"];
+p42 -> p43;
+
+p43 [label="SHANNON_DIVERSITY"];
+p44 [shape=point];
+p43 -> p44 [label="shannon_out"];
+
+p45 [shape=point,label="",fixedsize=true,width=0.1,xlabel="Channel.fromPath"];
+p46 [shape=point];
+p45 -> p46 [label="data_ch"];
+
+p47 [shape=point,label="",fixedsize=true,width=0.1];
+p49 [shape=circle,label="",fixedsize=true,width=0.1,xlabel="combine"];
+p47 -> p49;
+
+p48 [shape=point,label="",fixedsize=true,width=0.1];
+p49 [shape=circle,label="",fixedsize=true,width=0.1,xlabel="combine"];
+p48 -> p49;
+
+p30 [label="INTRO_DIVERSITY"];
+p49 [shape=circle,label="",fixedsize=true,width=0.1,xlabel="combine"];
+p30 -> p49;
+
+p49 [shape=circle,label="",fixedsize=true,width=0.1,xlabel="combine"];
+p50 [label="BETA_DIVERSITY"];
+p49 -> p50;
+
+p50 [label="BETA_DIVERSITY"];
+p51 [shape=point];
+p50 -> p51 [label="beta_out"];
+
+}
