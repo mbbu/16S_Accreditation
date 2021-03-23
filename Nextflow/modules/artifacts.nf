@@ -18,9 +18,9 @@ process OTU_CONVERSION {
 	"""
 }
 
-// Process 4(ii): MAFFT alignment
-process MAFFT_ALIGNMENT {
-	tag "Running MAFFT_alignment"
+// Process 4(ii): MAFFT alignment, Masking Aligned OTUS, Generating a Phylogenetic Tree and rooting of the phylogenetic tree
+process MAFFT_ALIGNMENT_PLUS {
+	tag "Running MAFFT_alignment,masking_aligned_otus,generating a phylogenetic tree and rooting"
 	publishDir path: { "${params.outdir}/artifacts" }
 
 	input:
@@ -28,70 +28,27 @@ process MAFFT_ALIGNMENT {
 
 	output:
 	file(aligned)
-
-	script:
-	aligned = "aligned_otus.qza"
-	"""
-	qiime alignment mafft --i-sequences ${otus_out} --o-alignment ${aligned}
-
-	"""
-}
-
-// Process 4(iii): Masking Aligned OTUS
-process MASKING {
-	tag " masking_aligned_otus"
-  	publishDir path: { "${params.outdir}/artifacts" }
-
-	input:
-	file(aligned_otus)
-
-	output:
 	file(masked)
-
-	script:
-	masked = "masked_aligned_otus.qza"
-	"""
-	qiime alignment mask --i-alignment ${aligned_otus} --o-masked-alignment ${masked}
-	"""
-}
-
-// Process 4(iv): Generating a Phylogenetic Tree
-process PHYLOGENY {
-	tag "Generating a Phylogenetic Tree"
-  	publishDir path: { "${params.outdir}/artifacts" }
-
-	input:
-	file(masked_output)
-
-	output:
 	file(unrooted_tree)
-
-	script:
-	unrooted_tree = 'unrooted_tree.qza'
-	"""
-	qiime phylogeny fasttree --i-alignment ${masked_output} --o-tree ${unrooted_tree}
-	"""
-}
-
-// Process 4(v):Mid-point rooting of the phylogenetic tree
-process MIDPOINT_ROOTING {
-	tag "Mid-point rooting of the phylogenetic tree"
-  	publishDir path: { "${params.outdir}/artifacts" }
-
-	input:
-	file(unrooted_tree)
-
-	output:
 	file(rooted)
 
 	script:
+	aligned = "aligned_otus.qza"
+	masked = "masked_aligned_otus.qza"
+	unrooted_tree = 'unrooted_tree.qza'
 	rooted = "rooted_tree.qza"
+
 	"""
-	qiime phylogeny midpoint-root --i-tree ${unrooted_tree} --o-rooted-tree ${rooted}
+	qiime phylogeny align-to-tree-mafft-fasttree \
+		--i-sequences ${otus_out} \
+		--o-alignment ${aligned} \
+		--o-masked-alignment ${masked} \
+		--o-tree ${unrooted_tree} \
+		--o-rooted-tree ${rooted}
 	"""
 }
 
-// Process 4(vi): Converting the OTU Table to Qiime Artifact
+// Process 4(iii): Converting the OTU Table to Qiime Artifact
 process OTUTABLE_TO_ARTIFACT {
 	tag "Converting OTU Table:"
   	publishDir path: { "${params.outdir}/artifacts" }
@@ -109,7 +66,7 @@ process OTUTABLE_TO_ARTIFACT {
   	"""
 }
 
-// Process 4(vi.2): Generating Feature Table
+// Process 4(iii.2): Generating Feature Table
 process FEATURE_TABLE {
 	tag "Generating Feature Table"
 	publishDir path: { "${params.outdir}/artifacts" }

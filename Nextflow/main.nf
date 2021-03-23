@@ -7,7 +7,7 @@ nextflow.enable.dsl = 2
 
 include { FASTQC; TRIMMOMATIC; POST_FASTQC } from "./modules/qc.nf" addParams(outdir: "${params.outdir}")
 include { USEARCH_MERGE; CHIMERA_DETECTION; REFERENCE_DB } from "./modules/chimeras.nf" addParams(outdir: "${params.outdir}")
-include { OTU_CONVERSION; MAFFT_ALIGNMENT; MASKING; PHYLOGENY; MIDPOINT_ROOTING; OTUTABLE_TO_ARTIFACT;
+include { OTU_CONVERSION; MAFFT_ALIGNMENT_PLUS; OTUTABLE_TO_ARTIFACT;
           FEATURE_TABLE} from './modules/artifacts.nf' addParams(outdir: "${params.outdir}")
 include { INTRO_DIVERSITY; ALPHA_DIVERSITY; SHANNON_DIVERSITY ; BETA_DIVERSITY }from './modules/visualization.nf'
 
@@ -24,8 +24,13 @@ workflow{
     // process 1b
     TRIMMOMATIC(read_pairs_ch)
     // process 1c
+<<<<<<< HEAD
     // POST_FASTQC(TRIMMOMATIC.out)
     
+=======
+    //POST_FASTQC(TRIMMOMATIC.out)
+
+>>>>>>> d753658dc1583d86b0216075a763015e526230be
     // process 2 merge reads
     USEARCH_MERGE(TRIMMOMATIC.out.collect())
     // process 3a Get Reference DB
@@ -38,16 +43,10 @@ workflow{
     // step 1
     OTU_CONVERSION(CHIMERA_DETECTION.out.otus_fastq)
     // step 2
-    MAFFT_ALIGNMENT(OTU_CONVERSION.out)
+    MAFFT_ALIGNMENT_PLUS(OTU_CONVERSION.out)
     // step 3
-    MASKING(MAFFT_ALIGNMENT.out)
-    // step 4
-    PHYLOGENY(MASKING.out)
-    // step 5
-    MIDPOINT_ROOTING(PHYLOGENY.out)
-    // step 6
     OTUTABLE_TO_ARTIFACT(CHIMERA_DETECTION.out.otutab_txt)
-    //step 7
+    //step 4
     FEATURE_TABLE(OTUTABLE_TO_ARTIFACT.out)
 
     //VISUALIZATION
