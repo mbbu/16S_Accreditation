@@ -4,41 +4,35 @@ nextflow.enable.dsl= 2
 
 //Merge the reads
 
-process USEARCH_MERGE{
-  publishDir path: "${params.outdir}/merge", mode: 'copy'
-  tag "Merging reads"
+process USEARCH_MERGE {
+    publishDir path: { "${params.outdir}/merge" }
+    tag "Merging reads"
 
-  input:
-  path reads_ch
+    input:
+    path (fastq)
 
-  output:
-  path "all_reads_merged.fastq", emit: all_reads_merged_fastq
-  //path "merge.log"
+    output:
+    path "all_reads_merged.fastq"
+    //path "merge.log"
 
-  script:
-  merge = 'all_reads_merged.fastq'
+    script:
+    """
+    mkdir -p u_merge
+    cp ${fastq}* u_merge/. && cd u_merge
+    # Test to find the limit to use for merging
+    usearch -fastq_mergepairs *_R1.paired.fastq -relabel @ -report ../merge.log
+    # Extract the limits
+    low_lim=`grep "Min" ../merge.log | grep -o "[0-9]\\+"`
+    high_lim=`grep "Max" ../merge.log | grep -o "[0-9]\\+"`
+    # Merge the Forward and Reverse
+    usearch -fastq_mergepairs *_R1.paired.fastq -relabel @ \
+    -fastq_maxdiffs 10 -fastq_pctid 10 \
+    -fastq_minmergelen \$low_lim -fastq_maxmergelen \$high_lim \
+    -fastqout ../all_reads_merged.fastq
+    # Clean up
+    cd .. && rm -rf u_merge
 
-  """
-  mkdir -p u_merge
-  cp ${reads_ch}* u_merge/. && cd u_merge
-
-  # Test to find the limit to use for merging
-  usearch -fastq_mergepairs *_R1_paired.fastq -relabel @ -report ../merge.log
-
-  # Extract the limits
-  low_lim=`grep "Min" ../merge.log | grep -o "[0-9]\\+"`
-  high_lim=`grep "Max" ../merge.log | grep -o "[0-9]\\+"`
-
-  # Merge the Forward and Reverse
-  usearch -fastq_mergepairs *_R1_paired.fastq -relabel @ \
-  -fastq_maxdiffs 10 -fastq_pctid 10 \
-  -fastq_minmergelen \$low_lim -fastq_maxmergelen \$high_lim \
-  -fastqout ../${merge}
-
-  # Clean up
-  cd .. && rm -rf u_merge
-
-  """
+    """
 }
 
 // Filter and primer removal
