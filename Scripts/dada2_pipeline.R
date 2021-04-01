@@ -41,8 +41,8 @@ rawplotF <- plotQualityProfile(forward_reads[5])
 #trimming and filtering
 
 filtered_out <- filterAndTrim(forward_reads, filtered_forward_reads,
-                              reverse_reads, filtered_reverse_reads, maxEE=c(2,2),
-                              rm.phix=TRUE, truncLen=c(230,200), trimLeft = c(30,30), multithread = TRUE)
+                              reverse_reads, filtered_reverse_reads, maxEE=c(3,3),
+                              rm.phix=TRUE, truncLen=c(250,180), trimLeft = c(25,25), multithread = TRUE)
 
 #checking the quality profile again
 
@@ -82,7 +82,7 @@ dada_reverse <- dada(derep_reverse, err=err_reverse_reads, pool="pseudo")
 
 #MERGING THE DADA CLASS OBJECTS FORWARD And reverse then inspecting them
 merged_amplicons <- mergePairs(dada_forward, derep_forward, dada_reverse,
-                               derep_reverse, trimOverhang=TRUE, minOverlap=170)
+                               derep_reverse, trimOverhang=TRUE)
 
 
 #constructing a sequence table
@@ -90,6 +90,14 @@ merged_amplicons <- mergePairs(dada_forward, derep_forward, dada_reverse,
 seqtab <- makeSequenceTable(merged_amplicons)
 class(seqtab)
 dim(seqtab)
+#To view lengths of the merged sequences
+table(nchar(getSequences(seqtab)))
+  
+#noticed the lengths of 3 merged sequences out of range.
+#to remove sequences out of range  
+#`%notin%` <- Negate(`%in%`)
+#seqtab2 <- seqtab[,nchar(colnames(seqtab)) %notin% 251:253]
+#noticed the lengths of 3 merged sequences out of range but if remove affects the next step adversly hence retained them.
 
 #REMOVING BIMERAS
 
