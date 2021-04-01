@@ -16,6 +16,12 @@ include { INTRO_DIVERSITY; ALPHA_DIVERSITY; SHANNON_DIVERSITY ; BETA_DIVERSITY }
 Channel.fromFilePairs( params.reads, checkExists:true )
     .set{ read_pairs_ch }
 
+Channel.fromPath( params.metadata, checkIfExists:true )
+    .set { medata_ch }
+
+Channel.fromPath(params.primers)
+    .set { primers_ch }
+
 //Run the main workflow below:
 workflow{
     // Quality check and trimming
@@ -24,21 +30,16 @@ workflow{
     // process 1b
     TRIMMOMATIC(read_pairs_ch)
     // process 1c
-// <<<<<<< HEAD
     // POST_FASTQC(TRIMMOMATIC.out)
-    
-// =======
-    //POST_FASTQC(TRIMMOMATIC.out)
 
-// >>>>>>> d753658dc1583d86b0216075a763015e526230be
     // Chimera detection and Otu generation
     // step 1
     USEARCH_MERGE(TRIMMOMATIC.out.collect())
     // step 2
-    primers_ch = Channel.fromPath(params.primers)
+
     FILTER(USEARCH_MERGE.out, primers_ch)
     // step 3
-    REFERENCEDB
+    REFERENCEDB()
     // step 4
     ORIENT(FILTER.out.filtered_fasta, REFERENCEDB.out)
     //step 5
