@@ -53,16 +53,16 @@ process FILTER {
 
     """
     #sub_sample reads
-    usearch -fastx_subsample ${all_reads_merged_fq} -sample_size 1000 -fastqout all_sub_primercheckU.fq
+    #usearch -fastx_subsample ${all_reads_merged_fq} -sample_size 1000 -fastqout all_sub_primercheckU.fq
 
     #creating a primer fastafile
-    echo ">forward_primer" >> Primers.fasta && cut -f3 ${primer_ch} | grep '^N' | uniq >> Primers.fasta
-    echo ">reverse_primer" >> Primers.fasta && cut -f4 ${primer_ch} | grep '^N' | uniq >> Primers.fasta
+    #echo ">forward_primer" >> Primers.fasta && cut -f3 ${primer_ch} | grep '^N' | uniq >> Primers.fasta
+    #echo ">reverse_primer" >> Primers.fasta && cut -f4 ${primer_ch} | grep '^N' | uniq >> Primers.fasta
 
     #searching the reads for primers
-    usearch -search_oligodb all_sub_primercheckU.fq -db Primers.fasta \
-    -strand both -userout Uprimer_hits.txt \
-    -userfields query+qlo+qhi+qstrand
+    #usearch -search_oligodb all_sub_primercheckU.fq -db Primers.fasta \
+    #-strand both -userout Uprimer_hits.txt \
+    #-userfields query+qlo+qhi+qstrand
 
     #filtering primers
     vsearch -fastq_filter ${all_reads_merged_fq} --fastq_maxee 1.0 \
