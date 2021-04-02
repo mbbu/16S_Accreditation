@@ -42,7 +42,7 @@ rawplotF <- plotQualityProfile(forward_reads[5])
 
 filtered_out <- filterAndTrim(forward_reads, filtered_forward_reads,
                               reverse_reads, filtered_reverse_reads, maxEE=c(3,3),
-                              rm.phix=TRUE, truncLen=c(250,180), trimLeft = c(25,25), multithread = TRUE)
+                              rm.phix=TRUE, truncLen=c(230,200), trimLeft = c(25,25), multithread = TRUE)
 
 #checking the quality profile again
 
