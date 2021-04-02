@@ -64,10 +64,10 @@ process FILTER {
     #-strand both -userout Uprimer_hits.txt \
     #-userfields query+qlo+qhi+qstrand
 
-    #filtering primers
+    #filtering primers using max quality score 75 for illimina
     vsearch -fastq_filter ${all_reads_merged_fq} --fastq_maxee 1.0 \
     --fastq_stripleft 24 --fastq_stripright 25 \
-    --fastq_qmax 42 --fastaout ${filtered} \
+    --fastq_qmax 75 --fastaout ${filtered} \
     --log ${filtlog}
     """
 }
