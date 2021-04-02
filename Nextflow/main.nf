@@ -61,18 +61,14 @@ workflow{
 
     //VISUALIZATION
     // step 0: Intro_diversity
-    medata_ch = Channel.fromPath(params.metadata)
     INTRO_DIVERSITY(FEATURE_TABLE.out.combine(medata_ch))
 
     // step 1: Alpha diversity
-    mdata_ch = Channel.fromPath(params.metadata)
-    ALPHA_DIVERSITY(INTRO_DIVERSITY.out.combine(mdata_ch))
+    ALPHA_DIVERSITY(INTRO_DIVERSITY.out.combine(medata_ch))
 
     // step2: Shannon diversity
-    metad_ch = Channel.fromPath(params.metadata)
-    SHANNON_DIVERSITY(INTRO_DIVERSITY.out.combine(metad_ch))
+    SHANNON_DIVERSITY(INTRO_DIVERSITY.out.combine(medata_ch))
 
     // step3: Beta diversity
-    data_ch = Channel.fromPath(params.metadata)
-    BETA_DIVERSITY(INTRO_DIVERSITY.out.combine(data_ch))
+    BETA_DIVERSITY(INTRO_DIVERSITY.out.combine(medata_ch))
 }
