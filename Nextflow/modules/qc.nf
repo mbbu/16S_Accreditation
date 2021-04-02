@@ -7,7 +7,7 @@ nextflow.enable.dsl = 2
 process FASTQC {
     publishDir path: { "${params.outdir}/fastqc_raw" }
     tag "Quality checking raw reads"
-    
+
     input:
     tuple val(sample_id), path(reads)
 
@@ -18,7 +18,7 @@ process FASTQC {
     """
     mkdir ${sample_id}_logs
     fastqc -o ${sample_id}_logs -f fastq -q ${reads}
-    
+
     """
 }
 
@@ -59,12 +59,13 @@ process POST_FASTQC {
     tag "Quality check trimmed reads"
 
     input:
-    tuple val(sample_id), path(read_R1), path(read_R2)
+    tuple path(read_R1), path(read_R2)
 
     output:
     path "${sample_id}_logs"
 
     script:
+    sample_id = ( read_R1 =~ /(.+)_R1.paired.fastq/ )[0][1]
     """
     mkdir ${sample_id}_logs
     fastqc -o ${sample_id}_logs -f fastq -q ${read_R1} ${read_R2}
