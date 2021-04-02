@@ -6,7 +6,7 @@ nextflow.enable.dsl = 2
 //Import modules here
 
 include { FASTQC; TRIMMOMATIC; POST_FASTQC } from "./modules/qc.nf" addParams(outdir: "${params.outdir}")
-include { USEARCH_MERGE; FILTER; REFERENCEDB; ORIENT; DEREPLICATION; CHIMERA_DETECTION; CLUSTER_OTUS } from "./modules/chimera.nf" addParams(outdir: "${params.outdir}")
+include { USEARCH_MERGE; FILTER; REFERENCEDB; ORIENT; DEREPLICATION; CHIMERA_DETECTION; CLUSTER_OTUS_U } from "./modules/chimera.nf" addParams(outdir: "${params.outdir}")
 include { OTU_CONVERSION; MAFFT_ALIGNMENT_PLUS; OTUTABLE_TO_ARTIFACT;
           FEATURE_TABLE} from './modules/artifacts.nf' addParams(outdir: "${params.outdir}")
 include { INTRO_DIVERSITY; ALPHA_DIVERSITY; SHANNON_DIVERSITY ; BETA_DIVERSITY }from './modules/visualization.nf'
@@ -30,7 +30,7 @@ workflow{
     // process 1b
     TRIMMOMATIC(read_pairs_ch)
     // process 1c
-    // POST_FASTQC(TRIMMOMATIC.out)
+    POST_FASTQC(TRIMMOMATIC.out)
 
     // Chimera detection and Otu generation
     // step 1
@@ -47,15 +47,15 @@ workflow{
     // step 5
     CHIMERA_DETECTION(DEREPLICATION.out.uniqs_fasta, REFERENCEDB.out)
     // step 6
-    CLUSTER_OTUS(DEREPLICATION.out.uniqs_fasta)
+    CLUSTER_OTUS_U(DEREPLICATION.out.uniqs_fasta,FILTER.out.filtered_fasta)
 
     // Qiime2 artefact
     // step 1
-    OTU_CONVERSION(CLUSTER_OTUS.out.otus_fasta)
+    OTU_CONVERSION(CLUSTER_OTUS_U.out.otus_fasta)
     // step 2
     MAFFT_ALIGNMENT_PLUS(OTU_CONVERSION.out)
     // step 3
-    OTUTABLE_TO_ARTIFACT(CLUSTER_OTUS.out.otutab_txt)
+    OTUTABLE_TO_ARTIFACT(CLUSTER_OTUS_U.out.otutab_txt)
     //step 4
     FEATURE_TABLE(OTUTABLE_TO_ARTIFACT.out)
 
