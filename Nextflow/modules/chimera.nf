@@ -210,3 +210,23 @@ process CLUSTER_OTUS {
       """
 
 }
+
+process CLUSTER_OTUS_U {
+      publishDir path: "${params.outdir}/otus", mode: 'copy'
+
+      input:
+      path (uniq_fa)
+      path (qced_fa)
+
+      output:
+      path "ASVs.fasta" , emit: otus_fasta
+      path "ASV_counts.txt", emit: otutab_txt
+      script:
+      """
+      usearch -unoise3 ${uniq_fa} -zotus ASVs.fasta -minsize 9
+
+      # get stats
+      sed -i 's/Zotu/ASV_/' ASVs.fasta
+      vsearch -usearch_global ${qced_fa} --db ASVs.fasta --id 0.99 --otutabout ASV_counts.txt
+      """
+}
