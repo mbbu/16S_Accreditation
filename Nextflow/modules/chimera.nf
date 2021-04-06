@@ -112,7 +112,7 @@ process ORIENT {
     orilog = "orient.log"
 
     """
-    usearch -orient ${filt_fasta} --db ${refe_db} \
+    vsearch -orient ${filt_fasta} --db ${refe_db} \
     --fastaout ${match} --notmatched ${notmatch} \
     --tabbedout ${oritab} --log ${orilog}
     """
