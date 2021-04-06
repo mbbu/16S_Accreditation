@@ -140,6 +140,11 @@ taxa <- assignTaxonomy(seqtab.nochim,"/data/asatsa/dada2_preprocess/dada2_amplic
 
 taxa <- addSpecies(taxa, "/data/asatsa/dada2_preprocess/dada2_amplicon_ex_workflow/refdb/silva_species_assignment_v138.1.fa.gz",tryRC = TRUE)
 
+#Alternative training database in assigning taxonomy. 
+taxa_rdp <- assignTaxonomy(seqtab.nochim,"/data/kauthar/Dada2/training_data/rdp_train_set_18.fa",tryRC = TRUE)
+
+write.table(taxa_rdp, "taxa_rdp_taxonomy.tsv", sep = "\t", quote=F, col.names=NA)
+  
 # count table:
 #asv_tab <- t(seqtab.nochim)
 #row.names(asv_tab) <- sub(">", "", asv_headers)
