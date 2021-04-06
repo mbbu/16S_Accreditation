@@ -127,7 +127,7 @@ write.table(summary_tab, "read-count-tracking.tsv", quote=FALSE, sep="\t", col.n
 
 taxa <- assignTaxonomy(seqtab.nochim,"/data/asatsa/dada2_preprocess/dada2_amplicon_ex_workflow/refdb/silva_nr99_v138.1_train_set.fa",tryRC = TRUE)
 
-
+taxa <- addSpecies(taxa, "/data/asatsa/dada2_preprocess/dada2_amplicon_ex_workflow/refdb/silva_species_assignment_v138.1.fa.gz",tryRC = TRUE)
 
 # count table:
 #asv_tab <- t(seqtab.nochim)
@@ -222,9 +222,15 @@ pal2 <- brewer.pal(8,"Dark2")
 pal3 <- brewer.pal(4,"Set1")
 comb <- c(pal2,pal3)
 
-pars <- expand.grid(col=col,Ity=Ity,stringsAsFactors = TRUE)
-with(pars[1:20,],rarecurve(otu_table(phyloseq_object),step = 150,ylab = "ObservedRSVs",xlab="number of reads",main="Rarefaction curves",xlim=c(0,$=comb)
-  
+#pars <- expand.grid(col=col,Ity=Ity,stringsAsFactors = TRUE)
+#with(pars[1:20,],rarecurve(otu_table(phyloseq_object),step = 150,ylab = "ObservedRSVs",xlab="number of reads",main="Rarefaction curves",xlim=c(0,$=comb)
+#the above rarefaction method is not working
+
+#creating a rarefaction curve
+rare <- rarecurve(seqtab.nochim, step=150, lwd=2, ylab="ASVs", label=F)
+# and adding a vertical line at the fewest seqs in any sample
+abline(v=(min(rowSums(seqtab.nochim))))   
+#this data has not been transformed, i dont like the way the plot looks
 
                            
                          
