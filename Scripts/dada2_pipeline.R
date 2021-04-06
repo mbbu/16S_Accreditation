@@ -37,6 +37,12 @@ dev.off()
 #looking at specific samples quality profile
 rawplotR <- plotQualityProfile(reverse_reads[5])
 rawplotF <- plotQualityProfile(forward_reads[5])
+  
+#Plotting Quality Profiles For Random Samples (In this case, 20 Samples)
+random_samples <- sample(size = 20, 1:length(forward_reads)) 
+fwd_qual_plots <- plotQualityProfile(forward_reads[random_samples])
+rev_qual_plots <- plotQualityProfile(reverse_reads[random_samples])
+
 
 #trimming and filtering
 
@@ -48,6 +54,11 @@ filtered_out <- filterAndTrim(forward_reads, filtered_forward_reads,
 
 forward_errorplt <- plotQualityProfile(filtered_reverse_reads[5])
 reverse_errorplt <- plotQualityProfile(filtered_forward_reads[5])
+  
+# Plotting Quality Profiles For Random Samples After Filtering
+filtrandom_samples <- sample(size = 20, 1:length(filtered_forward_reads))
+filtfwd_qual_plots <- plotQualityProfile(filtered_forward_reads[filtrandom_samples])
+filtrev_qual_plots <- plotQualityProfile(filtered_reverse_reads[filtrandom_samples])
 
 #how many reads did we lose
 dim(filtered_out)
