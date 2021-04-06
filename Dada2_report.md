@@ -4,8 +4,7 @@ This pipeline flow allows for inference of true biological sequences from reads.
 The datasets used were 16S rRNA amplicon sequencing data from (input sample names).
 
 ## Preprocessing ##
-Quality of the reads was analyzed using FastQC and it revealed that majority of the reads were of poor seqence quality.
-The subsequent MultiQC report revealed that there the first 40 bases of most reads had a low Phred score which could have been attributed to the high percentage
+Quality of the reads was analyzed by plotting quality profiles of random samples using an in-built feature provided by DADA2. Majority of the reads were noted to be of poor sequence quality with the first 40 bases of most reads exhibiting a low Phred score which could have been attributed to the high percentage
 N-count at the start of the reads.
 Primer metadata also indicated the barcode sequences and reverse primers that were still present in the reads and could have contributed to the low quality reported.
 Moreover, high adapter content characterized the end of the reads.
@@ -13,7 +12,17 @@ These details informed the trimming procedure that was performed on DADA2.
 Trimming parameters were set to retain ~ 230 bp forward reads and 200bp reverse reads. Using the barcode and reverse primer metadata, the first 25 and last
 25 nucleotides were trimmed as well so as to remain with the true reads. 
 Approximately 11.6% of the reads were lost after trimming.
-Quality profiles were then plotted which confirmed an significant improve in quality hence the reads proceeded to further downstream processing.
+Quality profiles of random samples were then plotted which confirmed an significant improve in quality hence the reads proceeded to further downstream processing.
+
+### Raw Quality Profiles for forward reads ###
+
+![QualityProfileForward](https://user-images.githubusercontent.com/68329457/113708720-40496e80-96ea-11eb-9a75-f3784415fef9.png)
+
+
+### Raw Quality Profiles for filtered forward reads ###
+
+![FilteredForwardPlot](https://user-images.githubusercontent.com/68329457/113709977-d03be800-96eb-11eb-8735-f231b79792ff.png)
+
 
 ## Learning Error Rates ##
 DADA2 allows for error modelling using a machine-learning based algorithm and this was utilized to establish sequencing error rates which may include substitutions
@@ -32,7 +41,8 @@ Dereplication involved retrieving unique sequences from all the identical sequen
 New quality scores were assigned to the unique sequences which is a functionality of the dereplication process.
 
 ## Sample Inference #
-Sample inference was performed in order to obtain sequence variants from the dereplicated sequences using the core sample inference algorithm supported by DADA2.
+Sample inference was performed in order to obtain sequence variants from the dereplicated sequences using the core sample inference algorithm supported by DADA2.![FilteredForwardPlot](https://user-images.githubusercontent.com/68329457/113710011-d762f600-96eb-11eb-80a8-e0636dc76cea.png)
+
 The multithreading parameter was set to true since the process is heavy and takes up a lot of computing resources.
 
 
