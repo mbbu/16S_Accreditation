@@ -21,6 +21,11 @@ such as Single Nucleotide Polymorphisms.
 Error rate plots revealed a decrease in error rates with an increase in sequence quality which was a satisfactory observation that validated the estimated error
 rates, that is, the estimated error rate was similar to the observed error rate.
 
+### Error rate plot for forward reads
+![forward_error_plot](https://user-images.githubusercontent.com/57720624/113694310-3f0f4600-96d8-11eb-836f-85611d889ded.png)
+
+### Error rate plot for reverse reads
+![reverse_error_plot](https://user-images.githubusercontent.com/57720624/113694512-88f82c00-96d8-11eb-9fea-eead0ef38b11.png)
 
 ## Dereplication ##
 Dereplication involved retrieving unique sequences from all the identical sequence reads which serves to reduce redundancy and computation time needed for analysis.
