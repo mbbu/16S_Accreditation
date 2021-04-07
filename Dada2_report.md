@@ -18,7 +18,7 @@ Moreover, high adapter content characterized the end of the reads.
 
 ```
 Runtime for quality profile plotting
-user  system elapsed 
+ user  system elapsed 
 0.001   0.000   0.001
 
 Disk space
@@ -35,7 +35,7 @@ Quality profiles of random samples were then plotted which confirmed an signific
 
 ```
 Runtime for filtering and trimming
-user   system  elapsed 
+    user   system  elapsed 
 8132.083  761.168  455.349 
 
 Disk space
@@ -53,7 +53,7 @@ Disk space
 
 ```
 Runtime for generating quality profiles of filtered reads 
-user  system elapsed 
+ user  system elapsed 
 0.001   0.000   0.001
 
 Disk space
@@ -70,12 +70,15 @@ rates, that is, the estimated error rate was similar to the observed error rate.
 ```
 Runtime
 Learning error rates for forward reads
-user  system elapsed 
+  user  system elapsed 
 91.795   5.415  97.239
 
 Learning error rates for reverse reads
-user  system elapsed 
+  user  system elapsed 
 79.172   5.645  84.817
+
+Disk space
+39.8 MB
 
 ```
 
@@ -88,6 +91,23 @@ user  system elapsed
 ## Dereplication ##
 Dereplication involved retrieving unique sequences from all the identical sequence reads which serves to reduce redundancy and computation time needed for analysis.
 New quality scores were assigned to the unique sequences which is a functionality of the dereplication process.
+
+```
+Runtime
+
+Dereplicating forward reads
+   user  system elapsed 
+345.318  57.924 403.333
+
+Dereplicating reverse reads
+   user  system elapsed 
+295.550  46.245 341.784
+
+Disk space
+Dereplicated forward reads -> 5.41 GB
+Dereplicated reverse reads -> 5.12 GB
+ 
+```
 
 ## Sample Inference #
 Sample inference was performed in order to obtain sequence variants from the dereplicated sequences using the core sample inference algorithm supported by DADA2.!
