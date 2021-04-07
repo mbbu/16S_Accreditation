@@ -186,6 +186,7 @@ library(reshape2)
 library(phyloseq)
 
 library('phyloseq')
+#NB: Provide a path to the set5_meta.txt file and ensure your file has the sample column labelled sample if not add the label. 
 samdata <- read.table("set5_meta.txt",header = TRUE,row.names = "sample")
 phyloseq_object <- phyloseq(otu_table(seqtab.nochim,taxa_are_rows=FALSE),sample_data(samdata),tax_table(taxa),phy_tree(fitGTR$tree))
 #renaming with ASV instead of a Dna string
@@ -229,14 +230,14 @@ ps_pcoa <- ordinate(
 #CREATING A COLOUR PALLETE
 library(RColorBrewer)
 d <- min(otu_table(phyloseq_object))
-col <- comb
 Ity <- "solid"
 Iwd <- 2
-pars <- expaisplay.brewer.all()#display all palletes
+pars <- display.brewer.all()#display all palletes
 pal1 <- brewer.pal(11,"Paired")
 pal2 <- brewer.pal(8,"Dark2")
 pal3 <- brewer.pal(4,"Set1")
 comb <- c(pal2,pal3)
+col <- comb
 
 #pars <- expand.grid(col=col,Ity=Ity,stringsAsFactors = TRUE)
 #with(pars[1:20,],rarecurve(otu_table(phyloseq_object),step = 150,ylab = "ObservedRSVs",xlab="number of reads",main="Rarefaction curves",xlim=c(0,$=comb)
