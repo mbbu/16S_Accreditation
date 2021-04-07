@@ -271,7 +271,7 @@ In this step the input sequences to be classified are from the sequence table wi
 used was from silva database and taxonomy was assigned upto the species level.
 An alternative training set from RDP database was used but was found to have more NAs than silva hence silva was choosen to be used as input in phylogeny where 
 needed.
-Below is a table of taxonomic assignments with silva training set.
+Below is a table of taxonomic assignments of the top 50 ASVs with silva training set.
 
 |  | Kingdom | Phylum | Class | Order | Family | Genus | Species |
 |-|-|-|-|-|-|-|-|
@@ -338,7 +338,12 @@ Here we’re going to plot Chao1 richness esimates and Shannon diversity values.
 Here we found...
 
 ## Beta diversity ##
-Principle coordinates analysis (PCoA) is a type of multidimensional scaling that operates on dissimilarities or distances. Here we used phyloseq going to generate and plot our PCoA, because it is very convenient for doing such things.
+Principle coordinates analysis (PCoA) is a type of multidimensional scaling that operates on dissimilarities or distances.
+Here we used phyloseq going to generate and plot our PCoA, because it is very convenient for doing such things.
+The plot generated was a bar plot for the top 30 ASVs by abundance by age using inflammation as the fill and facet wrapping by BV.
 
+Plot
+
+![Bar plot](https://user-images.githubusercontent.com/57720624/113875572-950ae900-97bf-11eb-8881-423d643b827b.png)
 
 
