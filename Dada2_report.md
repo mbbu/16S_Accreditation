@@ -29,6 +29,12 @@ Trimming parameters were set to retain ~ 230 bp forward reads and 200bp reverse 
 Approximately 11.6% of the reads were lost after trimming.
 Quality profiles of random samples were then plotted which confirmed an significant improve in quality hence the reads proceeded to further downstream processing.
 
+```
+Runtime for filtering and trimming
+user   system  elapsed 
+8132.083  761.168  455.349 
+
+```
 
 ### Quality Profiles for filtered forward reads ###
 
@@ -38,7 +44,12 @@ Quality profiles of random samples were then plotted which confirmed an signific
 
 ![ReverseFilteredPlot](https://user-images.githubusercontent.com/68329457/113711605-d4690500-96ed-11eb-9756-d8f797deee92.png)
 
+```
+Runtime for generating quality profiles of filtered reads 
+user  system elapsed 
+0.001   0.000   0.001
 
+```
 ## Learning Error Rates ##
 DADA2 allows for error modelling using a machine-learning based algorithm and this was utilized to establish sequencing error rates which may include substitutions
 such as Single Nucleotide Polymorphisms. 
