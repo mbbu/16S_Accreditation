@@ -1278,3 +1278,7 @@ Below is a table of taxonomic assignments with silva training set.
 
 
 ## Phylogeny ##
+Phylogenetic analysis was performed by firstly carrying out multiple sequence alignment after which a distance matrix was assigned for phylogenetic tree construction. We used the Neighbor-Joining algorithm as our clustering method for phylogenetic inference. The Generalized Time Reversible Model (GTR) was used as the substitution model and stochastic rearrangement was set which allowed for random permutation in the phylogenetic tree.
+
+
+
