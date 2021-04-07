@@ -37,7 +37,7 @@ workflow{
     USEARCH_MERGE(TRIMMOMATIC.out.collect())
     // step 2
 
-    FILTER(USEARCH_MERGE.out, primers_ch)
+    FILTER(USEARCH_MERGE.out.merged_reads, primers_ch)
     // step 3
     REFERENCEDB()
     // step 4

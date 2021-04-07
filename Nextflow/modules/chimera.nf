@@ -12,8 +12,8 @@ process USEARCH_MERGE {
     path (fastq)
 
     output:
-    path "all_reads_merged.fastq"
-    //path "merge.log"
+    path "all_reads_merged.fastq", emit : merged_reads
+    path "merge.log", emit : merge_log
 
     script:
     """
