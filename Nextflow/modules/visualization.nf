@@ -70,3 +70,34 @@ process BETA_DIVERSITY {
 
     """
 } 
+
+process TAXONOMIC_BARPLOT {
+    tag "generate taxonomic barplot"
+    publishDir path: { "${params.outdir}/visualization" }
+
+    input:
+    path otus_qza
+    path otutab_qza
+    path classifier_qza
+    path medata_ch
+
+    output:
+    path "taxonomy.qza", emit: taxonomy_qza
+    path "taxonomy.qzv", emit: taxonomy_qzv
+    path "taxabarplots.qzv", emit: taxabarplots_qzv
+
+    script:
+    taxonomyq = "taxonomy.qza"
+    taxonomyv = "taxonomy.qzv"
+    taxabar = "taxabarplots.qzv"
+
+    """
+    qiime feature-classifier classify-sklearn --i-reads ${otus_qza} --i-classifier ${classifier_qza} --o-classification ${taxonomyq}
+
+    qiime metadata tabulate --m-input-file ${taxonomyq} --o-visualization ${taxonomyv}
+
+    qiime taxa barplot --i-table ${otutab_qza} --i-taxonomy ${taxonomyq} --m-metadata-file ${medata_ch} --o-visualization ${taxabar}
+
+    """
+}
+

@@ -12,23 +12,25 @@ process USEARCH_MERGE {
     path (fastq)
 
     output:
-    path "all_reads_merged.fastq"
-    //path "merge.log"
+    path "all_reads_merged.fastq", emit : merged_reads
+    path "merge_test.log", emit : test_log
+    path "merge_details.log", emit : merge_log
 
     script:
     """
     mkdir -p u_merge
     cp ${fastq}* u_merge/. && cd u_merge
     # Test to find the limit to use for merging
-    usearch -fastq_mergepairs *_R1.paired.fastq -relabel @ -report ../merge.log
+    usearch -fastq_mergepairs *_R1.paired.fastq -relabel @ -report ../merge_test.log
     # Extract the limits
-    low_lim=`grep "Min" ../merge.log | grep -o "[0-9]\\+"`
-    high_lim=`grep "Max" ../merge.log | grep -o "[0-9]\\+"`
+    low_lim=`grep "Min" ../merge_test.log | grep -o "[0-9]\\+"`
+    high_lim=`grep "Max" ../merge_test.log | grep -o "[0-9]\\+"`
     # Merge the Forward and Reverse
     usearch -fastq_mergepairs *_R1.paired.fastq -relabel @ \
     -fastq_maxdiffs 10 -fastq_pctid 10 \
     -fastq_minmergelen \$low_lim -fastq_maxmergelen \$high_lim \
-    -fastqout ../all_reads_merged.fastq
+    -fastqout ../all_reads_merged.fastq \
+    -tabbedout ../merge_details.log
     # Clean up
     cd .. && rm -rf u_merge
 

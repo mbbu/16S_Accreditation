@@ -8,8 +8,8 @@ nextflow.enable.dsl = 2
 include { FASTQC; MultiQC_raw; TRIMMOMATIC; POST_FASTQC; Post_MultiQC } from "./modules/qc.nf" addParams(outdir: "${params.outdir}")
 include { USEARCH_MERGE; FILTER; REFERENCEDB; ORIENT; DEREPLICATION; CHIMERA_DETECTION; CLUSTER_OTUS_U } from "./modules/chimera.nf" addParams(outdir: "${params.outdir}")
 include { OTU_CONVERSION; MAFFT_ALIGNMENT_PLUS; OTUTABLE_TO_ARTIFACT;
-          FEATURE_TABLE} from './modules/artifacts.nf' addParams(outdir: "${params.outdir}")
-include { INTRO_DIVERSITY; ALPHA_DIVERSITY; SHANNON_DIVERSITY ; BETA_DIVERSITY }from './modules/visualization.nf'
+          FEATURE_TABLE; CLASSIFIER} from './modules/artifacts.nf' addParams(outdir: "${params.outdir}")
+include { INTRO_DIVERSITY; ALPHA_DIVERSITY; SHANNON_DIVERSITY ; BETA_DIVERSITY ; TAXONOMIC_BARPLOT}from './modules/visualization.nf'
 
 
 // set the reads channel
@@ -39,7 +39,7 @@ workflow{
     USEARCH_MERGE(TRIMMOMATIC.out.collect())
     // step 2
 
-    FILTER(USEARCH_MERGE.out, primers_ch)
+    FILTER(USEARCH_MERGE.out.merged_reads, primers_ch)
     // step 3
     REFERENCEDB()
     // step 4
@@ -60,6 +60,8 @@ workflow{
     OTUTABLE_TO_ARTIFACT(CLUSTER_OTUS_U.out.otutab_txt)
     //step 4
     FEATURE_TABLE(OTUTABLE_TO_ARTIFACT.out)
+    //step 5
+    CLASSIFIER()
 
     //VISUALIZATION
     // step 0: Intro_diversity
@@ -73,4 +75,7 @@ workflow{
 
     // step3: Beta diversity
     BETA_DIVERSITY(INTRO_DIVERSITY.out.combine(medata_ch))
+    
+    // step4: Taxonomic_barplot
+    TAXONOMIC_BARPLOT(OTU_CONVERSION.out, FEATURE_TABLE.out, CLASSIFIER.out, medata_ch)
 }

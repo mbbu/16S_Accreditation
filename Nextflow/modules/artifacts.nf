@@ -83,3 +83,20 @@ process FEATURE_TABLE {
 	  qiime tools import --input-path ${feature_tab} --type 'FeatureTable[Frequency]' --output-path ${otutab_out}
 	"""
 }
+
+// Process 4 (iv): Downloading Greengenes classifier.
+process CLASSIFIER {
+        tag "Retrieving Greengenes classifier"
+        publishDir path: { "${params.outdir}/artifacts" }
+
+        output:
+        path "greengenes-classifier.qza", emit: classifier_qza
+
+        script:
+
+        """
+	wget   -O "greengenes-classifier.qza"  "https://data.qiime2.org/2021.2/common/gg-13-8-99-515-806-nb-classifier.qza"
+
+        """
+}
+
