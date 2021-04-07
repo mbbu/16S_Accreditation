@@ -223,6 +223,10 @@ top30plot
 R <- estimate_richness(phyloseq_object,split = TRUE,measures = c("Observed","Shannon"))
 
 R1 <- estimate_richness(phyloseq_object,split = TRUE,measures = c("Observed","simpson"))
+#alpha diversity plots
+p <- plot_richness_estimates(phyloseq_object, "BV", "Inflammation")
+(p <- p + geom_boxplot(data = p$data, aes(x = BV, y = value, color = NULL),
+                       alpha = 0.5))
 #beta diversity
 #PCoA plot
 ps_pcoa <- ordinate(
