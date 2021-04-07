@@ -337,7 +337,7 @@ Alpha diversity entails using summary metrics that describe individual samples.
 Here we’re going to plot Chao1 richness esimates and Shannon diversity values. Chao1 is a richness estimator, “richness” being the total number of distinct ASVs in the samples. And Shannon’s diversity index is a metric of diversity. The term diversity includes “richness” (the total number of your distinct units) and “evenness” (the relative proportions of all of your distinct units). We used the phyloseq package here using the ```plot_richness()``` function.
 Below is the richness plot.
 
-![Alpha Diversity](https://user-images.githubusercontent.com/57720624/113882447-fb930580-97c5-11eb-82c4-e8019984a1a9.png)
+![alpha-diversity](https://user-images.githubusercontent.com/57720624/113937097-539b2d80-9801-11eb-869c-a40de5b66e68.png)
 
 ## Beta diversity ##
 Principle coordinates analysis (PCoA) is a type of multidimensional scaling that operates on dissimilarities or distances.
@@ -346,6 +346,6 @@ The plot generated was a bar plot for the top 30 ASVs by abundance by age using 
 
 Plot
 
-![Bar plot](https://user-images.githubusercontent.com/57720624/113875572-950ae900-97bf-11eb-8881-423d643b827b.png)
+![barplot](https://user-images.githubusercontent.com/57720624/113937411-cc01ee80-9801-11eb-9747-90ce9db32c5a.png)
 
 
