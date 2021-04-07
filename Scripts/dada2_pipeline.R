@@ -212,11 +212,11 @@ diversitybyinflammation <-plot_richness(phyloseq_object, x="BMI", measures=c("Sh
 saveRDS(diversitybyinflammation,"divbyinf.png")
 #plotbars
 
-top10 <- names(sort(taxa_sums(phyloseq_object), decreasing=TRUE))[1:10]
-ps.top10 <- transform_sample_counts(phyloseq_object, function(OTU) OTU/sum(OTU))
-ps.top10 <- prune_taxa(top10, ps.top10)
-top10plot <- plot_bar(ps.top10, x="BMI", fill="Age") + facet_wrap(~Inflammation, scales="free_x")
-#THE ABOVE CODE IS PRODUCING NOT GOOD GRAPHS 
+top30 <- names(sort(taxa_sums(phyloseq_object), decreasing=TRUE))[1:30]
+ps.top30 <- transform_sample_counts(phyloseq_object, function(OTU) OTU/sum(OTU))
+ps.top30 <- prune_taxa(top30, ps.top30)
+top30plot <- plot_bar(ps.top30, x="Age", fill="Inflammation") + facet_wrap(~BV, scales="free_x")
+top30plot
 
 #p values,shanon observed and simpson parameters
 
