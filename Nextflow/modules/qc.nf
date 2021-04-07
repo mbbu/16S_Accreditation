@@ -22,6 +22,21 @@ process FASTQC {
     """
 }
 
+process MultiQC_raw{
+    publishDir path: { "${params.outdir}/multiqc_raw" }
+    tag "Generating raw multiQC report"
+
+    input:
+        file(fastqc_out)
+
+    output:
+        file('multiqc_report.html')
+
+    """
+    multiqc .
+    """
+}
+
 //Process 1b: Trimming --Tool: trimmomatic
 
 process TRIMMOMATIC {
@@ -69,5 +84,20 @@ process POST_FASTQC {
     """
     mkdir ${sample_id}_logs
     fastqc -o ${sample_id}_logs -f fastq -q ${read_R1} ${read_R2}
+    """
+}
+
+process Post_MultiQC{
+    publishDir path: { "${params.outdir}/multiqc_postfastqc" }
+    tag "Generating post fastqc, multiQC report"
+
+    input:
+        file(fastqc_out)
+
+    output:
+        file('multiqc_report.html')
+
+    """
+    multiqc .
     """
 }

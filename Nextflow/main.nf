@@ -5,7 +5,7 @@ nextflow.enable.dsl = 2
 
 //Import modules here
 
-include { FASTQC; TRIMMOMATIC; POST_FASTQC } from "./modules/qc.nf" addParams(outdir: "${params.outdir}")
+include { FASTQC; MultiQC_raw; TRIMMOMATIC; POST_FASTQC; Post_MultiQC } from "./modules/qc.nf" addParams(outdir: "${params.outdir}")
 include { USEARCH_MERGE; FILTER; REFERENCEDB; ORIENT; DEREPLICATION; CHIMERA_DETECTION; CLUSTER_OTUS_U } from "./modules/chimera.nf" addParams(outdir: "${params.outdir}")
 include { OTU_CONVERSION; MAFFT_ALIGNMENT_PLUS; OTUTABLE_TO_ARTIFACT;
           FEATURE_TABLE} from './modules/artifacts.nf' addParams(outdir: "${params.outdir}")
@@ -27,10 +27,12 @@ workflow{
     // Quality check and trimming
     // process 1a
     FASTQC(read_pairs_ch)
+    MultiQC_raw(FASTQC.out.collect())
     // process 1b
     TRIMMOMATIC(read_pairs_ch)
     // process 1c
     POST_FASTQC(TRIMMOMATIC.out)
+    Post_MultiQC(POST_FASTQC.out.collect())
 
     // Chimera detection and Otu generation
     // step 1
