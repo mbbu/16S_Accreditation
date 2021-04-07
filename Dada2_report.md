@@ -67,6 +67,18 @@ such as Single Nucleotide Polymorphisms.
 Error rate plots revealed a decrease in error rates with an increase in sequence quality which was a satisfactory observation that validated the estimated error
 rates, that is, the estimated error rate was similar to the observed error rate.
 
+```
+Runtime
+Learning error rates for forward reads
+user  system elapsed 
+91.795   5.415  97.239
+
+Learning error rates for reverse reads
+user  system elapsed 
+79.172   5.645  84.817
+
+```
+
 ### Error rate plot for forward reads
 ![forward_error_plot](https://user-images.githubusercontent.com/57720624/113694310-3f0f4600-96d8-11eb-836f-85611d889ded.png)
 
