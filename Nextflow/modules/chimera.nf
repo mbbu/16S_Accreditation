@@ -23,8 +23,8 @@ process USEARCH_MERGE {
     # Test to find the limit to use for merging
     usearch -fastq_mergepairs *_R1.paired.fastq -relabel @ -report ../merge_test.log
     # Extract the limits
-    low_lim=`grep "Min" ../merge.log | grep -o "[0-9]\\+"`
-    high_lim=`grep "Max" ../merge.log | grep -o "[0-9]\\+"`
+    low_lim=`grep "Min" ../merge_test.log | grep -o "[0-9]\\+"`
+    high_lim=`grep "Max" ../merge_test.log | grep -o "[0-9]\\+"`
     # Merge the Forward and Reverse
     usearch -fastq_mergepairs *_R1.paired.fastq -relabel @ \
     -fastq_maxdiffs 10 -fastq_pctid 10 \
