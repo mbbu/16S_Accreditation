@@ -348,4 +348,8 @@ Plot
 
 ![barplot](https://user-images.githubusercontent.com/57720624/113937411-cc01ee80-9801-11eb-9747-90ce9db32c5a.png)
 
+### Rarefaction curve
+
+![Rarefaction curve](https://user-images.githubusercontent.com/57720624/113938723-a675e480-9803-11eb-8f52-cb34d708dcef.png)
+
 
