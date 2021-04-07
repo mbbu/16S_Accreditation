@@ -225,7 +225,10 @@ ps_pcoa <- ordinate(
   physeq = phyloseq_object,
   method = "PCoA",
   distance = "bray")
-##Pcoa plot code not working yet
+
+PCoa <- plot_ordination(physeq = phyloseq_object, ordination = ps_pcoa, color = "Inflammation", shape = "BV", title = "PCOA" +geom_point(aes(color = Inflammation ), alpha = 0.5, size = 4) +geom_point(colour = "grey90", size = 1.5))
+
+                                    
 #RAREFACTION CURVE
 #CREATING A COLOUR PALLETE
 library(RColorBrewer)
