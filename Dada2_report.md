@@ -1282,7 +1282,7 @@ Phylogenetic analysis was performed by firstly carrying out multiple sequence al
 
 
 
-## Creating phyloseq object ##
+
 
 
 
