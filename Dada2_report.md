@@ -20,6 +20,10 @@ Moreover, high adapter content characterized the end of the reads.
 Runtime for quality profile plotting
 user  system elapsed 
 0.001   0.000   0.001
+
+Disk space
+Forward reads quality profiles -> 28.9 MB
+Reverse reads quality profiles -> 29.6 MB
  
 ```
 
@@ -33,6 +37,9 @@ Quality profiles of random samples were then plotted which confirmed an signific
 Runtime for filtering and trimming
 user   system  elapsed 
 8132.083  761.168  455.349 
+
+Disk space
+11.5kb
 
 ```
 
@@ -48,6 +55,10 @@ user   system  elapsed
 Runtime for generating quality profiles of filtered reads 
 user  system elapsed 
 0.001   0.000   0.001
+
+Disk space
+Filtered forward reads quality profiles -> 23.2 MB
+Filtered reverse reads quality profiles -> 20.9 MB
 
 ```
 ## Learning Error Rates ##
