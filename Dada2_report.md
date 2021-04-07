@@ -1280,13 +1280,15 @@ Below is a table of taxonomic assignments with silva training set.
 ## Phylogeny ##
 Phylogenetic analysis was performed by firstly carrying out multiple sequence alignment after which a distance matrix was assigned for phylogenetic tree construction. We used the Neighbor-Joining algorithm as our clustering method for phylogenetic inference. The Generalized Time Reversible Model (GTR) was used as the substitution model and stochastic rearrangement was set which allowed for random permutation in the phylogenetic tree.
 
+## Alpha diversity ##
+Alpha diversity entails using summary metrics that describe individual samples. 
 
+### Richness and diversity estimates ###
+Here we’re going to plot Chao1 richness esimates and Shannon diversity values. Chao1 is a richness estimator, “richness” being the total number of distinct ASVs in the samples. And Shannon’s diversity index is a metric of diversity. The term diversity includes “richness” (the total number of your distinct units) and “evenness” (the relative proportions of all of your distinct units). We used the phyloseq package here using the ```plot_richness()``` function.
+Here we found...
 
-
-
-
-
-
+## Beta diversity ##
+Principle coordinates analysis (PCoA) is a type of multidimensional scaling that operates on dissimilarities or distances. Here we used phyloseq going to generate and plot our PCoA, because it is very convenient for doing such things.
 
 
 
