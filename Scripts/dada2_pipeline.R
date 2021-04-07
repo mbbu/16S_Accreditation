@@ -13,9 +13,9 @@ list.files() #make sure what we think is here is actually here
 # one with all sample names, by scanning our "samples" file we made earlier
 #samples <- scan("samples", what="character")- this code worked in conjunction with a bash script
 #reading sample names using r
-ForwardF <- sort(list.files(, pattern= c("*_R1.fastq"), full.names = TRUE))
-ForwardR <- sort(list.files(, pattern= c("*_R2.fastq"), full.names = TRUE))
-reads <- c(ForwardF,ForwardR)
+Forward <- sort(list.files(, pattern= c("*_R1.fastq"), full.names = TRUE))
+Reverse <- sort(list.files(, pattern= c("*_R2.fastq"), full.names = TRUE))
+reads <- c(Forward,Reverse)
 samples <- sapply(strsplit(basename(reads), "_"), `[`, 1)
 
 # one holding the file names of all the forward reads
@@ -86,8 +86,8 @@ derep_reverse <- derepFastq(filtered_reverse_reads, verbose=TRUE)
 names(derep_reverse) <- samples
 
 #inferring asvs
-dada_forward <- dada(derep_forward, err=err_forward_reads, pool="pseudo")
-dada_reverse <- dada(derep_reverse, err=err_reverse_reads, pool="pseudo")
+dada_forward <- dada(derep_forward, err=err_forward_reads, pool="pseudo", multithread = TRUE)
+dada_reverse <- dada(derep_reverse, err=err_reverse_reads, pool="pseudo", multithread = TRUE)
 
 #MERGING READS
 
@@ -169,8 +169,12 @@ treeNJ <- NJ(dm)
 fit = pml(treeNJ, data=phang.align)
 fitGTR <- update(fit, k=4, inv=0.2)
 fitGTR <- optim.pml(fitGTR, model="GTR", optInv=TRUE, optGamma=TRUE,
-                    rearrangement = "stochastic", control = pml.control(trace = 0))
-
+                    rearrangement = "stochastic", control = pml.control(trace = 0), multithread = TRUE)
+saveRDS(fitGTR,"phylogenetic_tree.rds")
+#rooting a the tree
+set.seed(711)
+phy_tree(phyloseq_object) <- root(phy_tree(phyloseq_object), sample(taxa_names(phyloseq_object), 1), resolve.root = TRUE)
+is.rooted(phy_tree(phyloseq_object))
 
 
 
