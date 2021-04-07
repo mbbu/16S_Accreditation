@@ -71,6 +71,7 @@ Chimeric sequences are identified if they can be exactly reconstructed by combin
 The removeBimeraDenovo function was used where sequence variants identified as bimeric are removed and bimera free collection of unique sequences is returned.
 To minimize on time taken, multithreading was set to true.
 95.8% of the reads were retained.
+Chimera detection led to the identification of 7920 bimeras out of 11722 input sequences.
 
 ## Tracking reads through the pipeline
 A mean of 79.68% of the reads were retained across all the processing steps of the pipeline.
