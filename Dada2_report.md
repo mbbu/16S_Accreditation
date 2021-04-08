@@ -12,115 +12,66 @@ Primer metadata also indicated the barcode sequences and reverse primers that we
 Moreover, high adapter content characterized the end of the reads.
 
 
-### Raw Quality Profiles for forward reads ###
+### Figure 1. Raw Quality Profiles for forward reads ###
 
 ![QualityProfileForward](https://user-images.githubusercontent.com/68329457/113708720-40496e80-96ea-11eb-9a75-f3784415fef9.png)
 
-### Raw Quality Profiles for reverse reads ###
+### Figure 2. Raw Quality Profiles for reverse reads ###
 ![RawQualityProfileReverse](https://user-images.githubusercontent.com/68329457/113710801-d5e5fd80-96ec-11eb-825b-84a40fb9c623.png)
 
-```
-Runtime for quality profile plotting
- user  system elapsed 
-0.001   0.000   0.001
-
-Disk space
-Forward reads quality profiles -> 28.9 MB
-Reverse reads quality profiles -> 29.6 MB
- 
-```
 
 These details informed the trimming procedure that was performed on DADA2. 
 Trimming parameters were set to retain ~ 230 bp forward reads and 200bp reverse reads. Using the barcode and reverse primer metadata, the first 25 and last
-25 nucleotides were trimmed as well so as to remain with the true reads. 
+25 nucleotides were trimmed as well so as to remain with the true reads. The maximum expect error was set at 3 for both forward and reverse reads.
+```
+  Parameters
+  maxEE=c(3,3),
+  rm.phix=TRUE,
+  truncLen=c(230,200), 
+  trimLeft = c(25,25), 
+  multithread = TRUE
+  
+```
+
 Approximately 11.6% of the reads were lost after trimming.
 Quality profiles of random samples were then plotted which confirmed an significant improve in quality hence the reads proceeded to further downstream processing.
 
-```
-Runtime for filtering and trimming
-    user   system  elapsed 
-8132.083  761.168  455.349 
 
-Disk space
-11.5kb
-
-```
-
-### Quality Profiles for filtered forward reads ###
+### Figure 3. Quality Profiles for filtered forward reads ###
 
 ![FilteredForwardPlot](https://user-images.githubusercontent.com/68329457/113709977-d03be800-96eb-11eb-8735-f231b79792ff.png)
 
-### Quality Profiles for filtered reverse reads ###
+### Figure 4. Quality Profiles for filtered reverse reads ###
 
 ![ReverseFilteredPlot](https://user-images.githubusercontent.com/68329457/113711605-d4690500-96ed-11eb-9756-d8f797deee92.png)
 
-```
-Runtime for generating quality profiles of filtered reads 
- user  system elapsed 
-0.001   0.000   0.001
 
-Disk space
-Filtered forward reads quality profiles -> 23.2 MB
-Filtered reverse reads quality profiles -> 20.9 MB
-
-```
 ## Learning Error Rates ##
 DADA2 allows for error modelling using a machine-learning based algorithm and this was utilized to establish sequencing error rates which may include substitutions
 such as Single Nucleotide Polymorphisms. 
 Error rate plots revealed a decrease in error rates with an increase in sequence quality which was a satisfactory observation that validated the estimated error
 rates, that is, the estimated error rate was similar to the observed error rate.
 
-```
-Runtime
-Learning error rates for forward reads
-  user  system elapsed 
-91.795   5.415  97.239
-
-Learning error rates for reverse reads
-  user  system elapsed 
-79.172   5.645  84.817
-
-Disk space
-39.8 MB
-
-```
-
-### Error rate plot for forward reads
+### Figure 5. Error rate plot for forward reads
 ![forward_error_plot](https://user-images.githubusercontent.com/57720624/113694310-3f0f4600-96d8-11eb-836f-85611d889ded.png)
 
-### Error rate plot for reverse reads
+### Figure 6. Error rate plot for reverse reads
 ![reverse_error_plot](https://user-images.githubusercontent.com/57720624/113694512-88f82c00-96d8-11eb-9fea-eead0ef38b11.png)
 
 ## Dereplication ##
 Dereplication involved retrieving unique sequences from all the identical sequence reads which serves to reduce redundancy and computation time needed for analysis.
 New quality scores were assigned to the unique sequences which is a functionality of the dereplication process.
 
-```
-Runtime
-
-Dereplicating forward reads
-   user  system elapsed 
-345.318  57.924 403.333
-
-Dereplicating reverse reads
-   user  system elapsed 
-295.550  46.245 341.784
-
-Disk space
-Dereplicated forward reads -> 5.41 GB
-Dereplicated reverse reads -> 5.12 GB
- 
-```
 
 ## Sample Inference #
 Sample inference was performed in order to obtain sequence variants from the dereplicated sequences using the core sample inference algorithm supported by DADA2.!
-The multithreading parameter was set to true since the process is heavy and takes up a lot of computing resources.
+The multithreading parameter was set to true since the process is heavy and takes up a lot of computing resources.Pseudo-pooling parameter was allowed to increase sensitivity of the algorithm using prior information.
 
 
 ## Merging ##
 Merging of the forward and reverse paired reads was carried out using the default minOverlap of 20 and setting the trimOverhang parameter to true as overhangs
 were not trimmed earlier in the pipeline.
-The parameters were choosen to facilitate optimal merging without decrease in quality.
+The parameters were chosen to facilitate optimal merging without decrease in quality.
 Most of the reads were merged together, only having 1.83%  of the reads not merged.
 
 
@@ -138,6 +89,8 @@ Chimera detection led to the identification of 7920 bimeras out of 11722 input s
 
 ## Tracking reads through the pipeline
 A mean of 79.68% of the reads were retained across all the processing steps of the pipeline.
+
+### Table 1. Summary table for reads tracking ###
 
 |             | Input            | Filtered         | dada_forward     | dada_reverse     | Merged           |  Non chimera              | final_perc_reads_retained |
 |-------------|------------------|------------------|------------------|------------------|------------------|---------------------------|---------------------------|
@@ -275,7 +228,8 @@ used was from silva database and taxonomy was assigned upto the species level.
 An alternative training set from RDP database was used but was found to have more NAs than silva hence silva was choosen to be used as input in phylogeny where 
 needed.
 Taxonomy was assigned utilizing a minBootstrap confidence of 50 which is the default parameter for the DADA2 algorithm. However, one can optimize the minBootstrap confidece to a different value  eg. ```minBootstrap = 80```
-Below is a table of taxonomic assignments of the top 50 ASVs with silva training set.
+
+### Table 2. Taxonomic assignments of the top 50 ASVs ###
 
 |  | Kingdom | Phylum | Class | Order | Family | Genus | Species |
 |-|-|-|-|-|-|-|-|
@@ -334,29 +288,37 @@ Below is a table of taxonomic assignments of the top 50 ASVs with silva training
 ## Phylogeny ##
 Phylogenetic analysis was performed by firstly carrying out multiple sequence alignment after which a distance matrix was assigned for phylogenetic tree construction. We used the Neighbor-Joining algorithm as our clustering method for phylogenetic inference. The Generalized Time Reversible Model (GTR) was used as the substitution model and stochastic rearrangement was set which allowed for random permutation in the phylogenetic tree.
 
+```
+Parameters used
+maxEE=c(3,3),
+m.phix=TRUE,
+truncLen=c(230,200),
+trimLeft = c(25,25),
+multithread = TRUE
+
+```
 ## Alpha diversity ##
 Alpha diversity entails using summary metrics that describe individual samples. 
 
 ### Richness and diversity estimates ###
-Here we’re going to plot Chao1 richness esimates and Shannon diversity values. Chao1 is a richness estimator, “richness” being the total number of distinct ASVs in the samples. And Shannon’s diversity index is a metric of diversity. The term diversity includes “richness” (the total number of your distinct units) and “evenness” (the relative proportions of all of your distinct units). We used the phyloseq package here using the ```plot_richness()``` function.
-A bar plot was plotted for the top 30 ASVs by abundance by age using inflammation as the fill and facet wrapping by BV.
+Plotting was done using Chao1 richness esimates and Shannon diversity values. Chao1 is a richness estimator, “richness” being the total number of distinct ASVs in the samples while Shannon’s diversity index is a metric of diversity. The term diversity includes “richness” (the total number of your distinct units) and “evenness” (the relative proportions of all of your distinct units). We used the phyloseq package here using the ```plot_richness()``` function.
 
-Plotmedian, maximum and minimum read count per sample
+### Figure 7. Richness Barplot for top 30 ASVS by abundance by age using inflammation as fill as BV as facet wrap
 
 ![barplot](https://user-images.githubusercontent.com/57720624/113937411-cc01ee80-9801-11eb-9747-90ce9db32c5a.png)
 
-Another richness plot in the form of a box plot was plotted as shown below.
+### Figure 8. Richness Boxplot
 
 ![alpha-diversity](https://user-images.githubusercontent.com/57720624/113937097-539b2d80-9801-11eb-869c-a40de5b66e68.png)
 
 ## Beta diversity ##
-Principle Coordinates aAnalysis (PCoA) was plotted to offer multidimensional scaling that operates on dissimilarities or distances.
-The created phyloseq object was used for generating the PCoA plot since it is very convenient for displaying beta diversity among the ssamples
+Principle Coordinates Analysis (PCoA) was plotted to offer multidimensional scaling that operates on dissimilarities or distances.
+The created phyloseq object was used for generating the PCoA plot since it is very convenient for displaying beta diversity among samples.
 
-```
+
 PcoA plot
 
-```
+
 
 ![PCoa plot](https://user-images.githubusercontent.com/57720624/113944120-b514c980-980c-11eb-8e85-8eeb3a781169.png)
 
