@@ -76,9 +76,8 @@ Most of the reads were merged together, only having 1.83%  of the reads not merg
 
 
 ## Constructing sequence table ##
-A sequence table is a matrix with rows corresponding to (and named by) the samples, and columns corresponding to (and named by) the sequence variants.
-From the table 11807 ASVs were inferred. 
-The lengths of the merged sequences had most of them fall in the same range although in some samples there was significant change.
+A sequence table revealed the inference of 11807 ASVs. 
+ Majority of the merged sequences had similar lengths although in some samples there was significant change.
 
 ## Removing chimeras ##
 Chimeric sequences are identified if they can be exactly reconstructed by combining a left-segment and a right-segment from two more abundant “parent” sequences.
