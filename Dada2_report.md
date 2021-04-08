@@ -316,15 +316,15 @@ Principle Coordinates Analysis (PCoA) was plotted to offer multidimensional scal
 The created phyloseq object was used for generating the PCoA plot since it is very convenient for displaying beta diversity among samples.
 
 
-PcoA plot
-
-
+### Figure 9. PCoA plot for  beta diversity visualization
 
 ![PCoa plot](https://user-images.githubusercontent.com/57720624/113944120-b514c980-980c-11eb-8e85-8eeb3a781169.png)
 
 
-### Rarefaction curve
+## Rarefaction analysis ##
 Rarefaction analysis revealed that majority of rarefaction curves flattened. However, there are about six troublesome samples with very low sequencing depth that need to be removed for further analysis. 
+
+### Figure 10. Rarefaction curves
 
 ![Rarefaction curve](https://user-images.githubusercontent.com/57720624/113938723-a675e480-9803-11eb-8f52-cb34d708dcef.png)
 
