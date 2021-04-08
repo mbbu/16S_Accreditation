@@ -66,10 +66,10 @@ New quality scores were assigned to the unique sequences which is a functionalit
 ## Sample Inference #
 
 Sample inference was performed in order to obtain sequence variants from the dereplicated sequences using the core sample inference algorithm supported by DADA2!
-DADA2 provides for two modes, ```pool=TRUE``` and ```pool=FALSE```.```pool=TRUE```improves the detection of rare variants that were seen just once or twice in an individual sample but many times across all samples.
+DADA2 provides two modes, ```pool=TRUE``` and ```pool=FALSE```. ```pool=TRUE```improves the detection of rare variants that were observed just once or twice in an individual sample but many times across all samples.
 However, it is a very computationally taxing step and can become intractable for datasets of tens of millions of reads.
-If a study does not need detection of rare variants then we recommend the Independent inference```pool=FALSE```.It has the advantage that computation time is linear in the number of samples, and
-memory requirements are flat with the number of samples. This allows scaling out to datasets of almost unlimited size
+If a study does not need detection of rare variants then we recommend the Independent inference ```pool=FALSE```. It has the advantage that computation time is linear in the number of samples, and
+memory requirements are flat with the number of samples. This allows scaling out to datasets of almost unlimited size.
 The multithreading parameter was set to true since the process is heavy and takes up a lot of computing resources.
 
 
