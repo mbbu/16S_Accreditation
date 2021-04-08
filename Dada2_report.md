@@ -30,8 +30,8 @@ Reverse reads quality profiles -> 29.6 MB
  
 ```
 
-These details informed the trimming procedure that was performed on DADA2. 
-Trimming parameters were set to retain ~ 230 bp forward reads and 200bp reverse reads. Using the barcode and reverse primer metadata, the first 25 and last
+These details informed the trimming procedure that was performed on DADA2.
+Trimming parameters were set to retain ~ 230 bp forward reads and 200bp reverse reads.This is because forward reads maintain better quality throughout with the quality dropping at the end around position 230, the reverse reads quality drops singnificantly at about position 200. Using the barcode and reverse primer metadata, the first 25 and last
 25 nucleotides were trimmed as well so as to remain with the true reads. 
 Approximately 11.6% of the reads were lost after trimming.
 Quality profiles of random samples were then plotted which confirmed an significant improve in quality hence the reads proceeded to further downstream processing.
@@ -66,7 +66,8 @@ Filtered reverse reads quality profiles -> 20.9 MB
 ```
 ## Learning Error Rates ##
 DADA2 allows for error modelling using a machine-learning based algorithm and this was utilized to establish sequencing error rates which may include substitutions
-such as Single Nucleotide Polymorphisms. 
+such as Single Nucleotide Polymorphisms. In order to verify that the error rates have been reasonably well-estimated, we inspected the fit between the observed error rates (black points) and the fitted error rates (black lines). 
+These figures show the frequencies of each type of transition as a function of the quality
 Error rate plots revealed a decrease in error rates with an increase in sequence quality which was a satisfactory observation that validated the estimated error
 rates, that is, the estimated error rate was similar to the observed error rate.
 
@@ -113,7 +114,11 @@ Dereplicated reverse reads -> 5.12 GB
 ```
 
 ## Sample Inference #
-Sample inference was performed in order to obtain sequence variants from the dereplicated sequences using the core sample inference algorithm supported by DADA2.!
+Sample inference was performed in order to obtain sequence variants from the dereplicated sequences using the core sample inference algorithm supported by DADA2!
+DADA2 provides for two modes, ```pool=TRUE``` and ```pool=FALSE```.```pool=TRUE```improves the detection of rare variants that were seen just once or twice in an individual sample but many times across all samples.
+However, it is a very computationally taxing step and can become intractable for datasets of tens of millions of reads. 
+If a study does not need detection of rare variants then we recommend the Independent inference```pool=FALSE```.It has the advantage that computation time is linear in the number of samples, and 
+memory requirements are flat with the number of samples. This allows scaling out to datasets of almost unlimited size
 The multithreading parameter was set to true since the process is heavy and takes up a lot of computing resources.
 
 
@@ -125,13 +130,13 @@ Most of the reads were merged together, only having 1.83%  of the reads not merg
 
 
 ## Constructing sequence table ##
-A sequence table is a matrix with rows corresponding to (and named by) the samples, and columns corresponding to (and named by) the sequence variants.
+This is a sample by sequence feature table valued by the number of times each sequence was observed in each sample.
 From the table 11807 ASVs were inferred. 
 The lengths of the merged sequences had most of them fall in the same range although in some samples there was significant change.
 
 ## Removing chimeras ##
 Chimeric sequences are identified if they can be exactly reconstructed by combining a left-segment and a right-segment from two more abundant “parent” sequences.
-The removeBimeraDenovo function was used where sequence variants identified as bimeric are removed and bimera free collection of unique sequences is returned.
+The ```removeBimeraDenovo``` function was used where sequence variants identified as bimeric are removed and bimera free collection of unique sequences is returned.
 To minimize on time taken, multithreading was set to true.
 95.8% of the reads were retained.
 Chimera detection led to the identification of 7920 bimeras out of 11722 input sequences.
@@ -332,7 +337,10 @@ Below is a table of taxonomic assignments of the top 50 ASVs with silva training
 
 
 ## Phylogeny ##
-Phylogenetic analysis was performed by firstly carrying out multiple sequence alignment after which a distance matrix was assigned for phylogenetic tree construction. We used the Neighbor-Joining algorithm as our clustering method for phylogenetic inference. The Generalized Time Reversible Model (GTR) was used as the substitution model and stochastic rearrangement was set which allowed for random permutation in the phylogenetic tree.
+Phylogenetic relatedness is commonly used to inform downstream analyses, especially the calculation of phylogeny-aware distances between microbial communities. The DADA2 sequence inference method is reference-free, so we constructed the phylogenetic tree relating the inferred sequence variants de novo.
+Using the DECIPHER R package, Phylogenetic analysis was performed by firstly carrying out multiple sequence alignment after which a distance matrix was assigned for phylogenetic tree construction.
+Using the phangorn R package did Neighbor-Joining algorithm as our clustering method for phylogenetic inference. 
+The Generalized Time Reversible Model (GTR) was used as the substitution model and stochastic rearrangement was set which allowed for random permutation in the phylogenetic tree.
 
 ## Alpha diversity ##
 Alpha diversity entails using summary metrics that describe individual samples. 
