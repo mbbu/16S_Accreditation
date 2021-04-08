@@ -21,7 +21,7 @@ Moreover, high adapter content characterized the end of the reads.
 
 
 These details informed the trimming procedure that was performed on DADA2.
-Trimming parameters were set to retain ~ 230 bp forward reads and 200bp reverse reads. This is because forward reads maintain better quality throughout with the quality dropping at the end around position 230, the reverse reads quality drops singnificantly at about position 200.Using the barcode and reverse primer metadata, the first 25 and last 25 nucleotides were trimmed as well so as to remain with the true reads. The maximum expect error was set at 3 for both forward and reverse reads.
+Trimming parameters were set to retain ~ 230 bp forward reads and 200bp reverse reads. This is because forward reads maintain better quality throughout with the quality dropping at the end around position 230, the reverse reads quality drops singnificantly at about position 200. Using the barcode and reverse primer metadata, the first 25 and last 25 nucleotides were trimmed as well so as to remain with the true reads. The maximum expect error was set at 3 for both forward and reverse reads.
 ```
   Parameters
   maxEE=c(3,3),
@@ -65,8 +65,7 @@ New quality scores were assigned to the unique sequences which is a functionalit
 
 ## Sample Inference #
 
-Sample inference was performed in order to obtain sequence variants from the dereplicated sequences using the core sample inference algorithm supported by DADA2!
-DADA2 provides two modes, ```pool=TRUE``` and ```pool=FALSE```. ```pool=TRUE```improves the detection of rare variants that were observed just once or twice in an individual sample but many times across all samples.
+Sample inference was performed in order to obtain sequence variants from the dereplicated sequences using the core sample inference algorithm supported by DADA2. DADA2 provides two modes, ```pool=TRUE``` and ```pool=FALSE```. ```pool=TRUE```improves the detection of rare variants that were observed just once or twice in an individual sample but many times across all samples.
 However, it is a very computationally taxing step and can become intractable for datasets of tens of millions of reads.
 If a study does not need detection of rare variants then we recommend the Independent inference ```pool=FALSE```. It has the advantage that computation time is linear in the number of samples, and
 memory requirements are flat with the number of samples. This allows scaling out to datasets of almost unlimited size.
