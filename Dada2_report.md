@@ -20,17 +20,16 @@ Moreover, high adapter content characterized the end of the reads.
 ![RawQualityProfileReverse](https://user-images.githubusercontent.com/68329457/113710801-d5e5fd80-96ec-11eb-825b-84a40fb9c623.png)
 
 
-These details informed the trimming procedure that was performed on DADA2. 
-Trimming parameters were set to retain ~ 230 bp forward reads and 200bp reverse reads. Using the barcode and reverse primer metadata, the first 25 and last
-25 nucleotides were trimmed as well so as to remain with the true reads. The maximum expect error was set at 3 for both forward and reverse reads.
+These details informed the trimming procedure that was performed on DADA2.
+Trimming parameters were set to retain ~ 230 bp forward reads and 200bp reverse reads. This is because forward reads maintain better quality throughout with the quality dropping at the end around position 230, the reverse reads quality drops singnificantly at about position 200.Using the barcode and reverse primer metadata, the first 25 and last 25 nucleotides were trimmed as well so as to remain with the true reads. The maximum expect error was set at 3 for both forward and reverse reads.
 ```
   Parameters
   maxEE=c(3,3),
   rm.phix=TRUE,
-  truncLen=c(230,200), 
-  trimLeft = c(25,25), 
+  truncLen=c(230,200),
+  trimLeft = c(25,25),
   multithread = TRUE
-  
+
 ```
 
 Approximately 11.6% of the reads were lost after trimming.
@@ -48,7 +47,8 @@ Quality profiles of random samples were then plotted which confirmed an signific
 
 ## Learning Error Rates ##
 DADA2 allows for error modelling using a machine-learning based algorithm and this was utilized to establish sequencing error rates which may include substitutions
-such as Single Nucleotide Polymorphisms. 
+such as Single Nucleotide Polymorphisms. In order to verify that the error rates have been reasonably well-estimated, we inspected the fit between the observed error rates (black points) and the fitted error rates (black lines).
+These figures show the frequencies of each type of transition as a function of the quality
 Error rate plots revealed a decrease in error rates with an increase in sequence quality which was a satisfactory observation that validated the estimated error
 rates, that is, the estimated error rate was similar to the observed error rate.
 
@@ -64,8 +64,14 @@ New quality scores were assigned to the unique sequences which is a functionalit
 
 
 ## Sample Inference #
-Sample inference was performed in order to obtain sequence variants from the dereplicated sequences using the core sample inference algorithm supported by DADA2.!
-The multithreading parameter was set to true since the process is heavy and takes up a lot of computing resources.Pseudo-pooling parameter was allowed to increase sensitivity of the algorithm using prior information.
+
+Sample inference was performed in order to obtain sequence variants from the dereplicated sequences using the core sample inference algorithm supported by DADA2!
+DADA2 provides for two modes, ```pool=TRUE``` and ```pool=FALSE```.```pool=TRUE```improves the detection of rare variants that were seen just once or twice in an individual sample but many times across all samples.
+However, it is a very computationally taxing step and can become intractable for datasets of tens of millions of reads.
+If a study does not need detection of rare variants then we recommend the Independent inference```pool=FALSE```.It has the advantage that computation time is linear in the number of samples, and
+memory requirements are flat with the number of samples. This allows scaling out to datasets of almost unlimited size
+The multithreading parameter was set to true since the process is heavy and takes up a lot of computing resources.
+
 
 
 ## Merging ##
@@ -76,12 +82,15 @@ Most of the reads were merged together, only having 1.83%  of the reads not merg
 
 
 ## Constructing sequence table ##
-A sequence table revealed the inference of 11807 ASVs. 
- Majority of the merged sequences had similar lengths although in some samples there was significant change.
+
+This is a sample by sequence feature table valued by the number of times each sequence was observed in each sample.
+The sequence table revealed 11807 ASVs.
+Majority of the merged sequences had similar lengths although in some samples there was significant change.
+
 
 ## Removing chimeras ##
 Chimeric sequences are identified if they can be exactly reconstructed by combining a left-segment and a right-segment from two more abundant “parent” sequences.
-The removeBimeraDenovo function was used where sequence variants identified as bimeric are removed and bimera free collection of unique sequences is returned.
+The ```removeBimeraDenovo``` function was used where sequence variants identified as bimeric are removed and bimera free collection of unique sequences is returned.
 To minimize on time taken, multithreading was set to true.
 95.8% of the reads were retained.
 Chimera detection led to the identification of 7920 bimeras out of 11722 input sequences.
@@ -222,9 +231,9 @@ A mean of 79.68% of the reads were retained across all the processing steps of t
 
 ## Assigning Taxonomy
 
-In this step the input sequences to be classified are from the sequence table without chimeras while the training set of reference sequences with known taxonomy 
+In this step the input sequences to be classified are from the sequence table without chimeras while the training set of reference sequences with known taxonomy
 used was from silva database and taxonomy was assigned upto the species level.
-An alternative training set from RDP database was used but was found to have more NAs than silva hence silva was choosen to be used as input in phylogeny where 
+An alternative training set from RDP database was used but was found to have more NAs than silva hence silva was choosen to be used as input in phylogeny where
 needed.
 Taxonomy was assigned utilizing a minBootstrap confidence of 50 which is the default parameter for the DADA2 algorithm. However, one can optimize the minBootstrap confidece to a different value  eg. ```minBootstrap = 80```
 
@@ -285,7 +294,10 @@ Taxonomy was assigned utilizing a minBootstrap confidence of 50 which is the def
 
 
 ## Phylogeny ##
-Phylogenetic analysis was performed by firstly carrying out multiple sequence alignment after which a distance matrix was assigned for phylogenetic tree construction. We used the Neighbor-Joining algorithm as our clustering method for phylogenetic inference. The Generalized Time Reversible Model (GTR) was used as the substitution model and stochastic rearrangement was set which allowed for random permutation in the phylogenetic tree.
+Phylogenetic relatedness is commonly used to inform downstream analyses, especially the calculation of phylogeny-aware distances between microbial communities. The DADA2 sequence inference method is reference-free, so we constructed the phylogenetic tree relating the inferred sequence variants de novo.
+Using the DECIPHER R package, Phylogenetic analysis was performed by firstly carrying out multiple sequence alignment after which a distance matrix was assigned for phylogenetic tree construction.
+Using the phangorn R package did Neighbor-Joining algorithm as our clustering method for phylogenetic inference.
+The Generalized Time Reversible Model (GTR) was used as the substitution model and stochastic rearrangement was set which allowed for random permutation in the phylogenetic tree.
 
 ```
 Parameters used
@@ -297,7 +309,7 @@ multithread = TRUE
 
 ```
 ## Alpha diversity ##
-Alpha diversity entails using summary metrics that describe individual samples. 
+Alpha diversity entails using summary metrics that describe individual samples.
 
 ### Richness and diversity estimates ###
 Plotting was done using Chao1 richness esimates and Shannon diversity values. Chao1 is a richness estimator, “richness” being the total number of distinct ASVs in the samples while Shannon’s diversity index is a metric of diversity. The term diversity includes “richness” (the total number of your distinct units) and “evenness” (the relative proportions of all of your distinct units). We used the phyloseq package here using the ```plot_richness()``` function.
@@ -321,10 +333,8 @@ The created phyloseq object was used for generating the PCoA plot since it is ve
 
 
 ## Rarefaction analysis ##
-Rarefaction analysis revealed that majority of rarefaction curves flattened. However, there are about six troublesome samples with very low sequencing depth that need to be removed for further analysis. 
+Rarefaction analysis revealed that majority of rarefaction curves flattened. However, there are about six troublesome samples with very low sequencing depth that need to be removed for further analysis.
 
 ### Figure 10. Rarefaction curves
 
 ![Rarefaction curve](https://user-images.githubusercontent.com/57720624/113938723-a675e480-9803-11eb-8f52-cb34d708dcef.png)
-
-
