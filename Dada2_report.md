@@ -236,6 +236,7 @@ An alternative training set from RDP database was used but was found to have mor
 needed.
 Taxonomy was assigned utilizing a minBootstrap confidence of 50 which is the default parameter for the DADA2 algorithm. However, one can optimize the minBootstrap confidece to a different value  eg. ```minBootstrap = 80```
 
+
 ### Table 2. Taxonomic assignments of the top 50 ASVs ###
 
 |  | Kingdom | Phylum | Class | Order | Family | Genus | Species |
@@ -291,6 +292,16 @@ Taxonomy was assigned utilizing a minBootstrap confidence of 50 which is the def
 | ASV49 | Bacteria | Bacteroidota | Bacteroidia | Bacteroidales | Prevotellaceae | Prevotella | corporis |
 | ASV50 | Bacteria | Firmicutes | Clostridia | Lachnospirales | Lachnospiraceae | Shuttleworthia | NA |
 
+### Taxonomy rank statistics
+| Rank | Total assigned | % of ASVs assigned | No. of unique without NA|
+|-|-|-|-|
+| Kingdom | 3724 | 96.0 | 3 |
+| Phylum | 2829 | 72.93 | 18 |
+| Class | 2629 | 67.78 | 29 |
+| Order | 2572 | 66.31 | 63 |
+| Family | 2397 | 61.8 | 116 |
+| Genus | 1579 | 40.71 | 305 |
+| Species | 320 | 8.25 | 205 |
 
 ## Phylogeny ##
 Phylogenetic relatedness is commonly used to inform downstream analyses, especially the calculation of phylogeny-aware distances between microbial communities. The DADA2 sequence inference method is reference-free, so we constructed the phylogenetic tree relating the inferred sequence variants de novo.
@@ -328,8 +339,9 @@ The created phyloseq object was used for generating the PCoA plot since it is ve
 
 ### Figure 9. PCoA plot for  beta diversity visualization
 
-![PCoa plot](https://user-images.githubusercontent.com/57720624/113944120-b514c980-980c-11eb-8e85-8eeb3a781169.png)
+There was no obvious clustering pattern observed. There is no correlation between inflammation and BV status
 
+![PCoa plot](https://user-images.githubusercontent.com/57720624/113944120-b514c980-980c-11eb-8e85-8eeb3a781169.png)
 
 ## Rarefaction analysis ##
 Rarefaction analysis revealed that majority of rarefaction curves flattened. However, there are about six troublesome samples with very low sequencing depth that need to be removed for further analysis.
