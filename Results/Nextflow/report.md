@@ -18,7 +18,7 @@ Our analysis pipeline follows the following order:
 6. Dereplication
 7. Chimera detection
 8. Clustering OTUs
-9. 
+9.
 
 This workflow has been summarized in the Nextflow analysis figure below
 
@@ -32,8 +32,8 @@ The total runtime of each process is summarized in this Nextflow [report](./pipe
 The timeline report shows the job wall time and memory used by each individual sample in the different steps. It also provides info on the total
 time used to run the entire workflow.
 
-A summary of this information is available in form if average time for each step, the percentage of CPUs used and memory in 
-this [report](./pipeline_info/execution_report.html). 
+A summary of this information is available in form if average time for each step, the percentage of CPUs used and memory in
+this [report](./pipeline_info/execution_report.html).
 
 The average storage used by the different steps is summarized below;
 
@@ -48,23 +48,114 @@ The average storage used by the different steps is summarized below;
 | Dereplication (vsearch) |  | 197M |
 | Chimera detection (vsearch) | | 261M |
 | Cluster OTUs (usearch) | | 792K |
-| Reference DB | | 7.2M | 
-| Artifacts and classifier | | 28M | 
+| Reference DB | | 7.2M |
+| Artifacts and classifier | | 28M |
 | Visualization (qiime2) | | 6.1M |
 
-# Quality check
-The Quality of the read was checked using fastqc. The data was characterized by low per base sequence content, 
+## Quality check
+The Quality of the read was checked using fastqc. The data was characterized by low per base sequence content,
 high sequence duplication and overrepresntation.
 
 A summary for all the samples is can be seen in this [muiltiqc report](./figures/raw_multiqc_report.html)
 
-# Trimming
-Trimming was done using trimmomatic to remove sequencing adapters and low quality reads. The following parameters 
+## Trimming
+Trimming was done using trimmomatic to remove sequencing adapters and low quality reads. The following parameters
 were used to improve the read quality:
 	- phred score 33
 	- min length 36
 	- sliding window 4:15
 
-# Post trimming quality check
+## Post trimming quality check
 A summary of the results post trimming is available in this [multiqc report](./figures/post_multiqc_report.html)
 
+## Merging
+Using usearch merge we were able to stitch 91.76%. Unsticthed read were discarded.
+
+```
+Totals:
+  20578230  Pairs (20.6M)
+  18883320  Merged (18.9M, 91.76%)
+  11799125  Alignments with zero diffs (57.34%)
+    339274  Too many diffs (> 10) (1.65%)
+     67847  Fwd too short (< 64) after tail trimming (0.33%)
+    621679  Rev too short (< 64) after tail trimming (3.02%)
+    666110  No alignment found (3.24%)
+         0  Alignment too short (< 16) (0.00%)
+         0  Merged too short (< 16)
+         0  Merged too long (> 486)
+     66970  Staggered pairs (0.33%) merged & trimmed
+    184.49  Mean alignment length
+    300.18  Mean merged length
+      0.40  Mean fwd expected errors
+      0.61  Mean rev expected errors
+      0.22  Mean merged expected errors
+```
+
+## Filtering
+vsearch was used with the following parameters
+
+```
+vsearch -fastq_filter all_reads_merged.fastq \
+	--fastq_maxee 1.0 \
+	--fastq_stripleft 24 \
+	--fastq_stripright 25 \
+	--fastq_qmax 75 \
+	--fastaout filtered.fasta \
+	--log filter.log
+```
+The `fastq_stripleft` and `fastq_stripright` are the lengths used to trim forward and reverse primers respectively. The `fastq_qmax`
+is the maximum quality score to use.
+
+18128002 sequences kept (of which 18128002 truncated), 755318 sequences discarded.
+
+## Orientation
+
+```
+7438266 nt in 5181 seqs, min 1205, max 1585, avg 1436
+
+Forward oriented sequences: 17753437 (97.93%)
+Reverse oriented sequences: 53738 (0.30%)
+All oriented sequences:     17807175 (98.23%)
+Not oriented sequences:     320827 (1.77%)
+Total number of sequences:  18128002
+```
+
+## Dereplication
+
+```
+4491530932 nt in 17805181 seqs, min 32, max 436, avg 252
+minseqlength 32: 1994 sequences discarded.
+
+758165 unique sequences, avg cluster 23.5, median 1, max 2501007
+```
+
+## Chimera detection
+```
+7438266 nt in 5181 seqs, min 1205, max 1585, avg 1436
+
+    0.28  minh
+    8.00  xn
+    1.40  dn
+    1.00  xa
+    0.80  mindiv
+    0.55  id
+       2  maxp
+
+uniqs.fasta: 114201/758165 chimeras (15.1%)
+```
+
+## Cluster OTUs
+
+1760 Unique Sequences. The counts table contains 1493 OTU entries and counts for each sample.
+```
+# Cluster Totals
+1760 good, 4228 chimeras
+
+# Counts table
+376414 nt in 1760 seqs, min 32, max 407, avg 214
+Masking 100%
+Counting k-mers 100%
+Creating k-mer index 100%
+Searching 100%
+Matching unique query sequences: 16998774 of 18128002 (93.77%)
+```
