@@ -4,10 +4,13 @@ This pipeline flow allows for inference of true biological sequences from reads.
 The datasets used were 16S rRNA amplicon sequencing data from (input sample names).
 
 ## Preprocessing ##
+With regards to number and lengths of the reads, there were        reads ranging from ()bp to ()bp in length. However, two samples had distinctively longer reads
+than the expected output form the sequencing platform that was used.
 Quality of the reads was analyzed by plotting quality profiles of random samples using an in-built feature provided by DADA2. Majority of the reads were noted to be of poor sequence quality with the first 40 bases of most reads exhibiting a low Phred score which could have been attributed to the high percentage
 N-count at the start of the reads.
 Primer metadata also indicated the barcode sequences and reverse primers that were still present in the reads and could have contributed to the low quality reported.
 Moreover, high adapter content characterized the end of the reads.
+
 
 ### Raw Quality Profiles for forward reads ###
 
@@ -271,6 +274,7 @@ In this step the input sequences to be classified are from the sequence table wi
 used was from silva database and taxonomy was assigned upto the species level.
 An alternative training set from RDP database was used but was found to have more NAs than silva hence silva was choosen to be used as input in phylogeny where 
 needed.
+Taxonomy was assigned utilizing a minBootstrap confidence of 50 which is the default parameter for the DADA2 algorithm. However, one can optimize the minBootstrap confidece to a different value  eg. ```minBootstrap = 80```
 Below is a table of taxonomic assignments of the top 50 ASVs with silva training set.
 
 |  | Kingdom | Phylum | Class | Order | Family | Genus | Species |
@@ -337,7 +341,7 @@ Alpha diversity entails using summary metrics that describe individual samples.
 Here we’re going to plot Chao1 richness esimates and Shannon diversity values. Chao1 is a richness estimator, “richness” being the total number of distinct ASVs in the samples. And Shannon’s diversity index is a metric of diversity. The term diversity includes “richness” (the total number of your distinct units) and “evenness” (the relative proportions of all of your distinct units). We used the phyloseq package here using the ```plot_richness()``` function.
 A bar plot was plotted for the top 30 ASVs by abundance by age using inflammation as the fill and facet wrapping by BV.
 
-Plot
+Plotmedian, maximum and minimum read count per sample
 
 ![barplot](https://user-images.githubusercontent.com/57720624/113937411-cc01ee80-9801-11eb-9747-90ce9db32c5a.png)
 
@@ -346,14 +350,19 @@ Another richness plot in the form of a box plot was plotted as shown below.
 ![alpha-diversity](https://user-images.githubusercontent.com/57720624/113937097-539b2d80-9801-11eb-869c-a40de5b66e68.png)
 
 ## Beta diversity ##
-Principle coordinates analysis (PCoA) is a type of multidimensional scaling that operates on dissimilarities or distances.
-Here we used phyloseq going to generate and plot our PCoA, because it is very convenient for doing such things.
-Below is the PCoa plot generated.
+Principle Coordinates aAnalysis (PCoA) was plotted to offer multidimensional scaling that operates on dissimilarities or distances.
+The created phyloseq object was used for generating the PCoA plot since it is very convenient for displaying beta diversity among the ssamples
+
+```
+PcoA plot
+
+```
 
 ![PCoa plot](https://user-images.githubusercontent.com/57720624/113944120-b514c980-980c-11eb-8e85-8eeb3a781169.png)
 
 
 ### Rarefaction curve
+Rarefaction analysis revealed that majority of rarefaction curves flattened. However, there are about six troublesome samples with very low sequencing depth that need to be removed for further analysis. 
 
 ![Rarefaction curve](https://user-images.githubusercontent.com/57720624/113938723-a675e480-9803-11eb-8f52-cb34d708dcef.png)
 
