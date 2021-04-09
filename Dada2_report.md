@@ -339,7 +339,7 @@ The created phyloseq object was used for generating the PCoA plot since it is ve
 
 ### Figure 9. PCoA plot for  beta diversity visualization
 
-There was no obvious clustering pattern observed. There is no correlation between inflammation and BV status
+There was clustering observed. This is due to a positive correlation between high inflammation and positive BV.
 
 ![PCoa plot](https://user-images.githubusercontent.com/57720624/113944120-b514c980-980c-11eb-8e85-8eeb3a781169.png)
 
