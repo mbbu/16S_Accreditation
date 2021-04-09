@@ -177,12 +177,14 @@ Matching unique query sequences: 16998774 of 18128002 (93.77%)
 ```
 
 ## Phylogeny
-Alighnemt was done using `mafft` followed by masking non informative sites. The phylogenetic tree was constructed using `fasttree`.
+Alighnemt was done using `mafft` followed by masking non informative sites. The phylogenetic tree was constructed using `fasttree`. The rooted ASVs tree can be visualized below.
+
+![Tree](figures/asv_rooted_tree.png)
 
 ## Taxonomy
 The Silva genes database was used for classification of  the ASVs. The classification presented below is up to level 3.
 
-BV negative samples were mostly characterized by _Lactobacillales_ species with relative abundance >50% for most samples as shown below. 
+BV negative samples were mostly characterized by _Lactobacillales_ species with relative abundance >50% for most samples as shown below.
 
 ![BV status](figures/BV_taxonomy.png)
 
