@@ -1,14 +1,13 @@
 ## Overview #
 Here we present the use of Divisive Amplicon Denoising Algorithm 2 (DADA2) pipeline for 16s rRNA data analysis.
-This pipeline flow allows for inference of true biological sequences from reads.
-The datasets used were 16S rRNA amplicon sequencing data from (input sample names).
+This pipeline flow allows for the inference of true biological sequences from reads. The datasets used were 16S rRNA amplicon sequencing data from (input sample names).
 
 ## Set up
-To work on DADA2 your data needs to be;
-demultiplexed, Non-biological nucleotides have been removed, e.g. primers, adapters, linkers, etc. although you can get around this in the filtering steps and 
-if paired-end sequencing data, the forward and reverse fastq files contain reads in matched order.
+To work on DADA2, the data needs to be demultiplexed and Non-biological nucleotides removed: primers, adapters, linkers. If not, preprocessing and filtering steps are required.  For paired-end sequence data, the forward and reverse fastq files contain reads in matched order. 
 
-### Packages
+For this exercise, we received a total of 124 paired-end reads samples with an average read length of 238bp.
+
+For the DADA2 pipeline, the following packages were installed in the HPC and used for the analysis.
 |No | Tool |Version |
 | -------- | -------- | -------- |
 |1. |DADA2 | 1.18.0|
@@ -24,15 +23,13 @@ if paired-end sequencing data, the forward and reverse fastq files contain reads
 |11.|DECIPHER | 2.18.1|
 |12.|Rcolorbrewer | 1.1.2|
 
-The working directory will contain all the output from each processes if applicable
+Next, we created a working directory to contain all the output from each process. 
 
 ## Preprocessing ##
-With regards to number and lengths of the reads, there were        reads ranging from ()bp to ()bp in length. However, two samples had distinctively longer reads
-than the expected output form the sequencing platform that was used.
-Quality of the reads was analyzed by plotting quality profiles of random samples using an in-built feature provided by DADA2. Majority of the reads were noted to be of poor sequence quality with the first 40 bases of most reads exhibiting a low Phred score which could have been attributed to the high percentage
-N-count at the start of the reads.
-Primer metadata also indicated the barcode sequences and reverse primers that were still present in the reads and could have contributed to the low quality reported.
-Moreover, high adapter content characterized the end of the reads.
+Regarding the number and lengths of the reads, reads ranged from 144 bp to 251. After using FastQC and MultiQC, we further used Dada2 built-in tools for quality check and trimming. 
+
+The reads' quality was analyzed by plotting quality profiles of random samples using an in-built feature provided by DADA2. The majority of the reads were of poor sequence quality, with the first 40 bases of most reads exhibiting a low Phred score which could have been attributed to the high percentage N-count at the start of the reads.
+Primer metadata also indicated the barcode sequences and reverse primers that were still present in the reads and could have contributed to the low quality reported. Moreover, high adapter content characterized the end of the reads.
 
 
 ### Figure 1. Raw Quality Profiles for forward reads ###
@@ -43,8 +40,8 @@ Moreover, high adapter content characterized the end of the reads.
 ![RawQualityProfileReverse](https://user-images.githubusercontent.com/68329457/113710801-d5e5fd80-96ec-11eb-825b-84a40fb9c623.png)
 
 
-These details informed the trimming procedure that was performed on DADA2.
-Trimming parameters were set to retain ~ 230 bp forward reads and 200bp reverse reads. This is because forward reads maintain better quality throughout with the quality dropping at the end around position 230, the reverse reads quality drops singnificantly at about position 200. Using the barcode and reverse primer metadata, the first 25 and last 25 nucleotides were trimmed as well so as to remain with the true reads. The maximum expect error was set at 3 for both forward and reverse reads.
+These details informed the trimming procedure performed on DADA2.
+We set the trimming parameters to retain ~ 230 bp forward reads and 200bp reverse reads. This is because forward reads maintain better quality throughout, with the quality dropping at the end around position 230, the reverse reads quality drops significantly at about position 200. Using the barcode and reverse primer metadata, we trimmed the first 25 and last 25 nucleotides to remain with the true reads. We set the maximum expect error at 3 for both forward and reverse reads.
 ```
   Parameters
   maxEE=c(3,3),
@@ -55,8 +52,7 @@ Trimming parameters were set to retain ~ 230 bp forward reads and 200bp reverse 
 
 ```
 
-Approximately 11.6% of the reads were lost after trimming.
-Quality profiles of random samples were then plotted which confirmed an significant improve in quality hence the reads proceeded to further downstream processing.
+Approximately 11.6% of the reads were lost after trimming. Quality profiles of random samples were plotted, which confirmed a significant quality improvement; hence the reads proceeded to further downstream processing.
 
 
 ### Figure 3. Quality Profiles for filtered forward reads ###
@@ -69,11 +65,10 @@ Quality profiles of random samples were then plotted which confirmed an signific
 
 
 ## Learning Error Rates ##
-DADA2 allows for error modelling using a machine-learning based algorithm and this was utilized to establish sequencing error rates which may include substitutions
-such as Single Nucleotide Polymorphisms. In order to verify that the error rates have been reasonably well-estimated, we inspected the fit between the observed error rates (black points) and the fitted error rates (black lines).
-These figures show the frequencies of each type of transition as a function of the quality
-Error rate plots revealed a decrease in error rates with an increase in sequence quality which was a satisfactory observation that validated the estimated error
-rates, that is, the estimated error rate was similar to the observed error rate.
+DADA2 allows for error modeling using a machine-learning-based algorithm, which we utilized to establish sequencing error rates, including substitutions
+such as Single Nucleotide Polymorphisms. To verify that the error rates have been reasonably well-estimated, we inspected the fit between the observed error rates (black points) and the fitted error rates (black lines).
+
+These figures show the frequencies of each type of transition as a function of the quality. Error rate plots revealed a decrease in error rates with an increase in sequence quality which was a satisfactory observation that validated the estimated error rates; that is, the estimated error rate was similar to the observed error rate.
 
 ### Figure 5. Error rate plot for forward reads
 ![forward_error_plot](https://user-images.githubusercontent.com/57720624/113694310-3f0f4600-96d8-11eb-836f-85611d889ded.png)
@@ -82,43 +77,36 @@ rates, that is, the estimated error rate was similar to the observed error rate.
 ![reverse_error_plot](https://user-images.githubusercontent.com/57720624/113694512-88f82c00-96d8-11eb-9fea-eead0ef38b11.png)
 
 ## Dereplication ##
-Dereplication involved retrieving unique sequences from all the identical sequence reads which serves to reduce redundancy and computation time needed for analysis.
-New quality scores were assigned to the unique sequences which is a functionality of the dereplication process.
+Dereplication involves retrieving unique sequences from all the identical sequence reads, which reduces redundancy and computation time needed for analysis.
+New quality scores were assigned to the unique sequences, which is a functionality of the dereplication process.
 
 
 ## Sample Inference #
 
-Sample inference was performed in order to obtain sequence variants from the dereplicated sequences using the core sample inference algorithm supported by DADA2. DADA2 provides two modes, ```pool=TRUE``` and ```pool=FALSE```. ```pool=TRUE```improves the detection of rare variants that were observed just once or twice in an individual sample but many times across all samples.
+Sample inference was performed to obtain sequence variants from the dereplicated sequences using the core sample inference algorithm supported by DADA2. DADA2 provides two modes, "`pool=TRUE` "and "`pool=FALSE` ". "`pool=TRUE` "improves the detection of rare variants observed just once or twice in an individual sample but often across all samples.
 However, it is a very computationally taxing step and can become intractable for datasets of tens of millions of reads.
-If a study does not need detection of rare variants then we recommend the Independent inference ```pool=FALSE```. It has the advantage that computation time is linear in the number of samples, and
-memory requirements are flat with the number of samples. This allows scaling out to datasets of almost unlimited size.
-The multithreading parameter was set to true since the process is heavy and takes up a lot of computing resources.
-
+If a study does not need detection of rare variants then the Independent inference "`pool=FALSE` "is recommended. It has the advantage that computation time is linear in the number of samples, and
+memory requirements are flat with the number of samples. This allows scaling out to datasets of almost unlimited size. Therefore, we set the multithreading parameter to true since the process is computationally heavy.
 
 
 ## Merging ##
-Merging of the forward and reverse paired reads was carried out using the default minOverlap of 20 and setting the trimOverhang parameter to true as overhangs
-were not trimmed earlier in the pipeline.
-The parameters were chosen to facilitate optimal merging without decrease in quality.
-Most of the reads were merged together, only having 1.83%  of the reads not merged.
+Merging of the forward and reverse paired reads was carried out using the default `minOverlap` of 20 and setting the `trimOverhang` parameter to true since we did not trim overhangs earlier in the pipeline.
+We chose the parameters to facilitate optimal merging without a decrease in quality. From there, we observed that most of the reads merged, with only 1.83%  of the reads not merged.
 
 
 ## Constructing sequence table ##
 
-This is a sample by sequence feature table valued by the number of times each sequence was observed in each sample.
-The sequence table revealed 11807 ASVs.
-Majority of the merged sequences had similar lengths although in some samples there was significant change
+The sequence table is a sample by sequence feature table, which is valued by the number of times each sequence was observed in each sample. From the sequence table, we observed 3879 ASVs. The majority of the merged sequences had similar lengths, although there was a significant change in some samples.
 
 
 ## Removing chimeras ##
-Chimeric sequences are identified if they can be exactly reconstructed by combining a left-segment and a right-segment from two more abundant “parent” sequences.
-The ```removeBimeraDenovo``` function was used where sequence variants identified as bimeric are removed and bimera free collection of unique sequences is returned.
-To minimize on time taken, multithreading was set to true.
-95.8% of the reads were retained.
-Chimera detection led to the identification of 7928 bimeras out of 11807 input sequences, therefore retaining 3879 ASVs.
+Chimeric sequences are identified if they can be exactly reconstructed by combining a left-segment and a right-segment from two more abundant "parent" sequences.
+We used the `removeBimeraDenovo` function, where sequence variants identified as bimeric are removed and return a bimera free collection of unique sequences. We set multithreading true to minimize on time taken and optimize the compute resources.
+
+After removing the chimeras, 95.8% of the reads were retained. Chimera detection identified 7928 bimeras out of 11807 input sequences, therefore retaining 3879 ASVs.
 
 ## Tracking reads through the pipeline
-A mean of 79.68% of the reads were retained across all the processing steps of the pipeline.
+A mean of 79.68% of the reads was retained across all the processing steps of the pipeline.
 
 ### Table 1. Summary table for reads tracking ###
 
@@ -253,11 +241,9 @@ A mean of 79.68% of the reads were retained across all the processing steps of t
 
 ## Assigning Taxonomy
 
-In this step the input sequences to be classified are from the sequence table without chimeras while the training set of reference sequences with known taxonomy
-used was from silva database and taxonomy was assigned upto the species level.
-An alternative training set from RDP database was used but was found to have more NAs than silva hence silva was choosen to be used as input in phylogeny where
-needed.
-Taxonomy was assigned utilizing a minBootstrap confidence of 50 which is the default parameter for the DADA2 algorithm. However, one can optimize the minBootstrap confidece to a different value  eg. ```minBootstrap = 80```
+In this step, the input sequences to be classified are from the sequence table without chimeras, while the training set of reference sequences with known taxonomy used was from the silva database, and taxonomy was assigned up to the species level.
+An alternative training set from the RDP database was used but was found to have more NAs than silva; hence silva was chosen for downstream analysis.
+Taxonomy was assigned utilizing a `minBootstrap` confidence of 50, which is the default parameter for the DADA2 algorithm. 
 
 
 ### Table 2. Taxonomic assignments of the top 50 ASVs ###
@@ -326,12 +312,15 @@ Taxonomy was assigned utilizing a minBootstrap confidence of 50 which is the def
 | Genus | 1579 | 40.71 | 305 |
 | Species | 320 | 8.25 | 205 |
 
-## Phylogeny ##
-Phylogenetic relatedness is commonly used to inform downstream analyses, especially the calculation of phylogeny-aware distances between microbial communities. The DADA2 sequence inference method is reference-free, so we constructed the phylogenetic tree relating the inferred sequence variants de novo.
-Using the DECIPHER R package, Phylogenetic analysis was performed by firstly carrying out multiple sequence alignment after which a distance matrix was assigned for phylogenetic tree construction.
-Using the phangorn R package did Neighbor-Joining algorithm as our clustering method for phylogenetic inference.
-The Generalized Time Reversible Model (GTR) was used as the substitution model and stochastic rearrangement was set which allowed for random permutation in the phylogenetic tree.
+From the table, we observe that 40.71% and 8.25 ASVs were assigned to genus and species level, respectively. 51% could only be assigned to rank higher than genus. 
 
+## Phylogeny ##
+Phylogenetic relatedness is commonly used to inform downstream analyses, especially calculating phylogeny-aware distances between microbial communities. The DADA2 sequence inference method is reference-free, so we constructed the phylogenetic tree relating the inferred sequence variants de novo.
+
+Using the DECIPHER R package, we carried out Phylogenetic analysis by firstly performing multiple sequence alignment, after which a distance matrix was assigned for phylogenetic tree construction.
+We used the `phangorn` R package with the Neighbor-Joining algorithm as our clustering method for phylogenetic inference. The Generalized Time Reversible Model (GTR) was used as the substitution model, and stochastic rearrangement was set, which allowed for random permutation in the phylogenetic tree.
+
+Here are the parameters:
 ```
 Parameters used
 maxEE=c(3,3),
@@ -342,16 +331,16 @@ multithread = TRUE
 
 ```
 ## Alpha diversity ##
-Alpha diversity entails using summary metrics that describe individual samples.
+Alpha diversity is the average species diversity in our samples generated from summary metrics that describe individual samples.
 
 ### Richness and diversity estimates ###
-Plotting was done using Chao1 richness esimates and Shannon diversity values. Chao1 is a richness estimator, “richness” being the total number of distinct ASVs in the samples while Shannon’s diversity index is a metric of diversity. The term diversity includes “richness” (the total number of your distinct units) and “evenness” (the relative proportions of all of your distinct units). We used the phyloseq package here using the ```plot_richness()``` function.
+Plotting was done using Chao1 richness estimates and Shannon diversity values. Chao1 is a richness estimator, "richness" being the total number of distinct ASVs in the samples, while Shannon's diversity index is a metric of diversity. The term diversity includes "richness" (the total number of your distinct units) and "evenness" (the relative proportions of all of your distinct units). We used the `phyloseq` package, and specifically, the "`plot_richness()` "function.
 
 ### Figure 7. Richness Barplot for top 30 ASVS by abundance by age using inflammation as fill as BV as facet wrap
 
 ![barplot](https://user-images.githubusercontent.com/57720624/113937411-cc01ee80-9801-11eb-9747-90ce9db32c5a.png)
 
-### Figure 8 Richness Barplot by abundance by BV using inflammation as fill and status i.e categories of BMI as facet wrap
+### Figure 8 Richness Barplot by abundance by BV using inflammation as fill and status i.e. categories of BMI as facet wrap
 
 ![bv_bmi](https://user-images.githubusercontent.com/57720624/114186830-fcf03980-994f-11eb-8f8e-d2f647386a03.png)
 
@@ -365,13 +354,12 @@ Plotting was done using Chao1 richness esimates and Shannon diversity values. Ch
 
 ![alpha-diversity](https://user-images.githubusercontent.com/57720624/113937097-539b2d80-9801-11eb-869c-a40de5b66e68.png)
 
-Median values and interquartile ranges indicated by the plots shows significant difference between Positive and negative BV samples (p-value <0.05).
-Negative BV samples showed greater CHAO/ACE values this leads to an expected higher species richness of the microbiota.
-The Simpson index,and the Shannon index showed higher the diversity of the microbiota in BV positive samples.
+The plots' median values and interquartile ranges show a significant difference between Positive and negative BV samples (p-value <0.05).
+Negative BV samples showed greater CHAO/ACE values; this leads to an expected higher species richness of the microbiota.
+The Simpson index and the Shannon index showed a higher diversity of the microbiota in BV positive samples.
 
 ## Beta diversity ##
-Principle Coordinates Analysis (PCoA) was plotted to offer multidimensional scaling that operates on dissimilarities or distances.
-The created phyloseq object was used for generating the PCoA plot since it is very convenient for displaying beta diversity among samples.
+Principal Coordinates Analysis (PCoA) was plotted to offer multidimensional scaling that operates on dissimilarities or distances. We used the created phyloseq object to generate the PCoA plot since it is very convenient for displaying beta diversity among samples.
 
 
 ### Figure 11. PCoA plot for  beta diversity visualization
@@ -381,7 +369,7 @@ There was clustering observed. This is due to a positive correlation between hig
 ![PCoa plot](https://user-images.githubusercontent.com/57720624/113944120-b514c980-980c-11eb-8e85-8eeb3a781169.png)
 
 ## Rarefaction analysis ##
-Rarefaction analysis revealed that majority of rarefaction curves flattened. However, there are about six troublesome samples with very low sequencing depth that need to be removed for further analysis.
+Rarefaction analysis revealed that the majority of rarefaction curves flattened. However, there are about six troublesome samples with very low sequencing depth.
 
 ### Figure 12. Rarefaction curves
 
@@ -392,13 +380,13 @@ Rarefaction analysis revealed that majority of rarefaction curves flattened. How
 ### Figure 13. Phylum abundance in relation to BV status across the samples
 ![Phylum nice](https://user-images.githubusercontent.com/57720624/114185635-9d455e80-994e-11eb-9d76-b0627b9e55c6.png)
 
-The dominant phylum across the different samples regardless of the BV status is Fusobacteriota while Bacteroidota is the second most dominant in BV positive.
+The dominant phylum across the different samples regardless of the BV status is Fusobacteriota, while Bacteroidota is the second most dominant in BV positive samples.
 
 
 ### Figure 14. Genus abundance in relation to BV status across the samples 
 ![Genus](https://user-images.githubusercontent.com/57720624/114182895-dfb96c00-994b-11eb-9477-b6c5271acfea.png)
 
-There are different dominant genus according to the BV status as shown above
+There are different dominant genus according to the BV status, as shown above. Notably, lactobacillus is significantly reduced in the BV negative samples, in agreement with the literature. 
 
 
 
