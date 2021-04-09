@@ -3,6 +3,25 @@ Here we present the use of Divisive Amplicon Denoising Algorithm 2 (DADA2) pipel
 This pipeline flow allows for inference of true biological sequences from reads.
 The datasets used were 16S rRNA amplicon sequencing data from (input sample names).
 
+## Set up
+To work on DADA2 your data needs to be;
+demultiplexed, Non-biological nucleotides have been removed, e.g. primers, adapters, linkers, etc. although you can get around this in the filtering steps and 
+if paired-end sequencing data, the forward and reverse fastq files contain reads in matched order.
+
+### Packages
+1. DADA2
+2. phyloseq
+3. dplyr
+4. vegan
+5. phangorn
+6. ggplot2
+7. scales
+8. grid
+9. reshape2
+10. profvis
+
+The working directory will contain all the output from each processes if applicable
+
 ## Preprocessing ##
 With regards to number and lengths of the reads, there were        reads ranging from ()bp to ()bp in length. However, two samples had distinctively longer reads
 than the expected output form the sequencing platform that was used.
