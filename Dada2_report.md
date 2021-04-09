@@ -9,18 +9,18 @@ demultiplexed, Non-biological nucleotides have been removed, e.g. primers, adapt
 if paired-end sequencing data, the forward and reverse fastq files contain reads in matched order.
 
 ### Packages
-1. DADA2
-2. phyloseq
-3. dplyr
-4. vegan
-5. phangorn
-6. ggplot2
-7. scales
-8. grid
-9. reshape2
-10. profvis
-11. DECIPHER
-12. Rcolorbrewer
+1. DADA2 version 1.18.0
+2. phyloseq version 1.34.0
+3. dplyr version 1.0.3
+4. vegan version 2.5.7
+5. phangorn version 2.5.5
+6. ggplot2 version 3.3.3
+7. scales version 1.1.1
+8. grid version 4.0.2
+9. reshape2 version 1.4.4
+10. profvis version 0.3.7
+11. DECIPHER version 2.18.1
+12. Rcolorbrewer version 1.1.2
 
 The working directory will contain all the output from each processes if applicable
 
