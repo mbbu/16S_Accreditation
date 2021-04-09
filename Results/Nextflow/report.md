@@ -196,8 +196,15 @@ Low inflammation status was majorly characterized with _Lactobacillales_ in most
 ### Bray Curtis Principal Coordinate Analysis (PcoA)
 The outcome of a PCoA tells us that objects ordinated closer to one another are more similar than those ordinated further away.
 Samples positive for BV cluster together while those negative for BV also cluster separately.
+
 ![BV status PcoA](https://user-images.githubusercontent.com/55382239/114182921-e811a700-994b-11eb-9a60-ac394fba5be7.png)
 
-In the diagram below, samples with high inflammation, cluster together, those with low inflammation cluster together as well while those that are neutral cluster together.
+In the diagram below, samples with high inflammation, cluster together, those with low inflammation cluster together as well while those that are neutral cluster together separately.
+
+![Inflammation status PCoA](https://user-images.githubusercontent.com/55382239/114184023-ff9d5f80-994c-11eb-9733-5703fe595355.png)
+
+The samples also cluster based on the Body Mass Index (BMI) as shown below:
+
+
 
 
