@@ -1,6 +1,6 @@
 # Nexflow Report
 
-We developed a 16s workflow report utilizing the following tools:
+We developed a Qiime2 16s nextflow workflow pipeline utilizing the following tools:
 | *Tool* | *Version* |
 |:----:| :------ |
 | fastqc | v0.11.9 |
@@ -195,4 +195,9 @@ Low inflammation status was majorly characterized with _Lactobacillales_ in most
 ## Alpha and Beta Diversity
 ### Bray Curtis Principal Coordinate Analysis (PcoA)
 The outcome of a PCoA tells us that objects ordinated closer to one another are more similar than those ordinated further away.
+Samples positive for BV cluster together while those negative for BV also cluster separately.
+![BV status PcoA](https://user-images.githubusercontent.com/55382239/114182921-e811a700-994b-11eb-9a60-ac394fba5be7.png)
+
+In the diagram below, samples with high inflammation, cluster together, those with low inflammation cluster together as well while those that are neutral cluster together.
+
 
