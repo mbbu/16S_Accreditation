@@ -228,13 +228,19 @@ The figure below shows us the abundance of samples based on different parameters
 ![Age_Evenness](https://user-images.githubusercontent.com/55382239/114187166-5ce6e000-9950-11eb-9556-349b69178886.png)
 
 ### Shannon group significance
+Shannon index is a measure of entropy where the unit is bits of information if the logarithms are base 2.
+The diagrams below illustrate the shannon diversity index for each parameter.
 
+#### _Bacteria Vaginosis_ shannon index
 ![BV_shannon](https://user-images.githubusercontent.com/55382239/114187774-0ded7a80-9951-11eb-91c8-8b75ec1f245b.png)
 
+#### Shannon index for inflammation
 ![Inflammation_Shannon](https://user-images.githubusercontent.com/55382239/114187899-2f4e6680-9951-11eb-848e-c5b757b54fca.png)
 
+#### Body Mass Index
 ![BMI_Shannon](https://user-images.githubusercontent.com/55382239/114188016-5442d980-9951-11eb-8e77-6cc382bc31f2.png)
 
+#### Age
 ![Age_Shannon](https://user-images.githubusercontent.com/55382239/114188283-a84dbe00-9951-11eb-8e91-a9b69e1c9bec.png)
 
 
