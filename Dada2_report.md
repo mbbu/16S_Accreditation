@@ -342,6 +342,10 @@ Plotting was done using Chao1 richness esimates and Shannon diversity values. Ch
 
 ![alpha-diversity](https://user-images.githubusercontent.com/57720624/113937097-539b2d80-9801-11eb-869c-a40de5b66e68.png)
 
+Median values and interquartile ranges indicated by the plots shows significant difference between Positive and negative BV samples (p-value <0.05).
+Negative BV samples showed greater CHAO/ACE values this leads to an expected higher species richness of the microbiota.
+The Simpson index,and the Shannon index showed higher the diversity of the microbiota in BV positive samples.
+
 ## Beta diversity ##
 Principle Coordinates Analysis (PCoA) was plotted to offer multidimensional scaling that operates on dissimilarities or distances.
 The created phyloseq object was used for generating the PCoA plot since it is very convenient for displaying beta diversity among samples.
