@@ -1,13 +1,15 @@
 # Nexflow Report
 
 We developed a 16s workflow report utilizing the following tools:
-- fastqc v0.11.9
-- multiqc v1.4
-- trimommatic v0.39
-- usearch v11.0
-- vsearch v2.16
-- qiime env 2020.8
-- Nextflow 20.10.0 (dsl 2)
+| *Tool* | *Version* |
+|:----:| :------ |
+| fastqc | v0.11.9 |
+| multiqc | v1.4 |
+| trimommatic | v0.39 |
+| usearch | v11.0 |
+| vsearch | v2.16 |
+| qiime2 env | 2020.8 |
+| nextflow | 20.10.0 (dsl 2) |
 
 Our analysis pipeline follows the following order:
 1. Quality check of raw reads
