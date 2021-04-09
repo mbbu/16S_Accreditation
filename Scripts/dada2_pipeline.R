@@ -177,7 +177,17 @@ phy_tree(phyloseq_object) <- root(phy_tree(phyloseq_object), sample(taxa_names(p
 is.rooted(phy_tree(phyloseq_object))
 
 
+#Taxonomy plots.
+#Phylum
+phylum_plot <-  plot_bar(phyloseq_object, x="sample", fill="Phylum") + facet_wrap(~BV, scales="free_x")
 
+#Genus
+top50 <- names(sort(taxa_sums(phyloseq_object), decreasing=TRUE))[1:50]
+ps.top50 <- transform_sample_counts(phyloseq_object, function(OTU) OTU/sum(OTU))
+ps.top50 <- prune_taxa(top50, ps.top50)
+Genus_plot <-  plot_bar(ps.top50, x="sample", fill="Genus") + facet_wrap(~BV, scales="free_x")
+
+  
 #creating a phyloseq object
 #Loading necessary libraries
 
