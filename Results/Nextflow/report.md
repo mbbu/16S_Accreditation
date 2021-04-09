@@ -148,11 +148,12 @@ uniqs.fasta: 114201/758165 chimeras (15.1%)
 
 ## Cluster ASVs
 We used the `usearch unoise3` algorithm to do clustering which has the following conditions
-		1. ASVs which are more than 97% identical are clustered together
-		2. Sequences with less than 8 counts are discarded. [Bokulich et al.](www.nature.com/nmeth/journal/v10/n1/full/nmeth.2276.html)
-		 suggest using a 0.005% minimum abundance threshold, which in our case came out to be ~9, that is what we specified.
-		3. Sequences are ranked based on abundance, singletons are discarded
-		4. Chimeric reads are discarded
+
+1. ASVs which are more than 97% identical are clustered together
+2. Sequences with less than 8 counts are discarded. [Bokulich et al.](www.nature.com/nmeth/journal/v10/n1/full/nmeth.2276.html)
+	suggest using a 0.005% minimum abundance threshold, which in our case came out to be ~9, that is what we specified.
+3. Sequences are ranked based on abundance, singletons are discarded
+4. Chimeric reads are discarded
 
 With these conditions the number of ASVs generated is lower compared to Dada2 pipeline. The advantage of `unoise3`
 it doesn't produce spurious ASVs which can be an issue in Dada2. It also shows the best balance between resolution and specificity.
