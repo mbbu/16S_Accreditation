@@ -18,7 +18,9 @@ Our analysis pipeline follows the following order:
 6. Dereplication
 7. Chimera detection
 8. Clustering OTUs
-9.
+9. Phylogeny
+10. Taxonomy
+11. Alpha diversity and Beta diversity
 
 This workflow has been summarized in the Nextflow analysis figure below
 
@@ -159,3 +161,9 @@ Creating k-mer index 100%
 Searching 100%
 Matching unique query sequences: 16998774 of 18128002 (93.77%)
 ```
+
+## Phylogeny
+Alighnemt was done using `mafft` followed by masking non informative sites. The phylogenetic tree was constructed using `fasttree`.
+
+## Taxonomy
+The Silva genes database was used for classification of  the ASVs.
