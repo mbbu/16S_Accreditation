@@ -3,7 +3,6 @@
 // Process 4(i): Conversion of OTUS into Qiime2 Artifact
 process OTU_CONVERSION {
 	tag "OTU conversion"
-
 	publishDir path: { "${params.outdir}/artifacts" }
 
 	input:
@@ -32,11 +31,13 @@ process MAFFT_ALIGNMENT_PLUS {
 	file(masked)
 	file(unrooted_tree)
 	file(rooted)
+	path("unrooted-tree")
+	path("rooted-tree")
 
 	script:
 	aligned = "aligned_otus.qza"
 	masked = "masked_aligned_otus.qza"
-	unrooted_tree = 'unrooted_tree.qza'
+	unrooted = 'unrooted_tree.qza'
 	rooted = "rooted_tree.qza"
 
 	"""
@@ -44,8 +45,12 @@ process MAFFT_ALIGNMENT_PLUS {
 		--i-sequences ${otus_out} \
 		--o-alignment ${aligned} \
 		--o-masked-alignment ${masked} \
-		--o-tree ${unrooted_tree} \
+		--o-tree ${unrooted} \
 		--o-rooted-tree ${rooted}
+
+	# Export the phlogenetic tree in nwk information
+	qiime tools export --input-path ${unrooted} --output-path unrooted-tree
+	qiime tools export --input-path ${rooted} --output-path rooted-tree
 	"""
 }
 
@@ -64,7 +69,7 @@ process OTUTABLE_TO_ARTIFACT {
 	otubiomtable = "otu_table.from_txt_hdf5.biom"
 	"""
 	biom convert -i ${otu_table} -o ${otubiomtable} --table-type="OTU table" --to-hdf5
-  """
+  	"""
 }
 
 // Process 4(iii.2): Generating Feature Table
@@ -83,4 +88,20 @@ process FEATURE_TABLE {
 	"""
 	  qiime tools import --input-path ${feature_tab} --type 'FeatureTable[Frequency]' --output-path ${otutab_out}
 	"""
+}
+
+// Process 4 (iv): Downloading Greengenes classifier.
+process CLASSIFIER {
+        tag "Retrieving Greengenes classifier"
+        publishDir path: { "${params.outdir}/artifacts" }
+
+        output:
+        path "greengenes-classifier.qza", emit: classifier_qza
+
+        script:
+
+        """
+	wget   -O "greengenes-classifier.qza"  "https://data.qiime2.org/2021.2/common/gg-13-8-99-515-806-nb-classifier.qza"
+
+        """
 }
