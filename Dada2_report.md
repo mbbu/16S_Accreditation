@@ -3,54 +3,122 @@ Here we present the use of Divisive Amplicon Denoising Algorithm 2 (DADA2) pipel
 This pipeline flow allows for inference of true biological sequences from reads.
 The datasets used were 16S rRNA amplicon sequencing data from (input sample names).
 
+## Set up
+To work on DADA2 your data needs to be;
+demultiplexed, Non-biological nucleotides have been removed, e.g. primers, adapters, linkers, etc. although you can get around this in the filtering steps and 
+if paired-end sequencing data, the forward and reverse fastq files contain reads in matched order.
+
+### Packages
+1. DADA2 version 1.18.0
+2. phyloseq version 1.34.0
+3. dplyr version 1.0.3
+4. vegan version 2.5.7
+5. phangorn version 2.5.5
+6. ggplot2 version 3.3.3
+7. scales version 1.1.1
+8. grid version 4.0.2
+9. reshape2 version 1.4.4
+10. profvis version 0.3.7
+11. DECIPHER version 2.18.1
+12. Rcolorbrewer version 1.1.2
+
+The working directory will contain all the output from each processes if applicable
+
 ## Preprocessing ##
-Quality of the reads was analyzed using FastQC and it revealed that majority of the reads were of poor seqence quality.
-The subsequent MultiQC report revealed that there the first 40 bases of most reads had a low Phred score which could have been attributed to the high percentage
+With regards to number and lengths of the reads, there were        reads ranging from ()bp to ()bp in length. However, two samples had distinctively longer reads
+than the expected output form the sequencing platform that was used.
+Quality of the reads was analyzed by plotting quality profiles of random samples using an in-built feature provided by DADA2. Majority of the reads were noted to be of poor sequence quality with the first 40 bases of most reads exhibiting a low Phred score which could have been attributed to the high percentage
 N-count at the start of the reads.
 Primer metadata also indicated the barcode sequences and reverse primers that were still present in the reads and could have contributed to the low quality reported.
 Moreover, high adapter content characterized the end of the reads.
-These details informed the trimming procedure that was performed on DADA2. 
-Trimming parameters were set to retain ~ 230 bp forward reads and 200bp reverse reads. Using the barcode and reverse primer metadata, the first 25 and last
-25 nucleotides were trimmed as well so as to remain with the true reads. 
+
+
+### Figure 1. Raw Quality Profiles for forward reads ###
+
+![QualityProfileForward](https://user-images.githubusercontent.com/68329457/113708720-40496e80-96ea-11eb-9a75-f3784415fef9.png)
+
+### Figure 2. Raw Quality Profiles for reverse reads ###
+![RawQualityProfileReverse](https://user-images.githubusercontent.com/68329457/113710801-d5e5fd80-96ec-11eb-825b-84a40fb9c623.png)
+
+
+These details informed the trimming procedure that was performed on DADA2.
+Trimming parameters were set to retain ~ 230 bp forward reads and 200bp reverse reads. This is because forward reads maintain better quality throughout with the quality dropping at the end around position 230, the reverse reads quality drops singnificantly at about position 200. Using the barcode and reverse primer metadata, the first 25 and last 25 nucleotides were trimmed as well so as to remain with the true reads. The maximum expect error was set at 3 for both forward and reverse reads.
+```
+  Parameters
+  maxEE=c(3,3),
+  rm.phix=TRUE,
+  truncLen=c(230,200),
+  trimLeft = c(25,25),
+  multithread = TRUE
+
+```
+
 Approximately 11.6% of the reads were lost after trimming.
-Quality profiles were then plotted which confirmed an significant improve in quality hence the reads proceeded to further downstream processing.
+Quality profiles of random samples were then plotted which confirmed an significant improve in quality hence the reads proceeded to further downstream processing.
+
+
+### Figure 3. Quality Profiles for filtered forward reads ###
+
+![FilteredForwardPlot](https://user-images.githubusercontent.com/68329457/113709977-d03be800-96eb-11eb-8735-f231b79792ff.png)
+
+### Figure 4. Quality Profiles for filtered reverse reads ###
+
+![ReverseFilteredPlot](https://user-images.githubusercontent.com/68329457/113711605-d4690500-96ed-11eb-9756-d8f797deee92.png)
+
 
 ## Learning Error Rates ##
 DADA2 allows for error modelling using a machine-learning based algorithm and this was utilized to establish sequencing error rates which may include substitutions
-such as Single Nucleotide Polymorphisms. 
+such as Single Nucleotide Polymorphisms. In order to verify that the error rates have been reasonably well-estimated, we inspected the fit between the observed error rates (black points) and the fitted error rates (black lines).
+These figures show the frequencies of each type of transition as a function of the quality
 Error rate plots revealed a decrease in error rates with an increase in sequence quality which was a satisfactory observation that validated the estimated error
 rates, that is, the estimated error rate was similar to the observed error rate.
 
+### Figure 5. Error rate plot for forward reads
+![forward_error_plot](https://user-images.githubusercontent.com/57720624/113694310-3f0f4600-96d8-11eb-836f-85611d889ded.png)
+
+### Figure 6. Error rate plot for reverse reads
+![reverse_error_plot](https://user-images.githubusercontent.com/57720624/113694512-88f82c00-96d8-11eb-9fea-eead0ef38b11.png)
 
 ## Dereplication ##
 Dereplication involved retrieving unique sequences from all the identical sequence reads which serves to reduce redundancy and computation time needed for analysis.
 New quality scores were assigned to the unique sequences which is a functionality of the dereplication process.
 
+
 ## Sample Inference #
-Sample inference was performed in order to obtain sequence variants from the dereplicated sequences using the core sample inference algorithm supported by DADA2.
+
+Sample inference was performed in order to obtain sequence variants from the dereplicated sequences using the core sample inference algorithm supported by DADA2. DADA2 provides two modes, ```pool=TRUE``` and ```pool=FALSE```. ```pool=TRUE```improves the detection of rare variants that were observed just once or twice in an individual sample but many times across all samples.
+However, it is a very computationally taxing step and can become intractable for datasets of tens of millions of reads.
+If a study does not need detection of rare variants then we recommend the Independent inference ```pool=FALSE```. It has the advantage that computation time is linear in the number of samples, and
+memory requirements are flat with the number of samples. This allows scaling out to datasets of almost unlimited size.
 The multithreading parameter was set to true since the process is heavy and takes up a lot of computing resources.
+
 
 
 ## Merging ##
 Merging of the forward and reverse paired reads was carried out using the default minOverlap of 20 and setting the trimOverhang parameter to true as overhangs
 were not trimmed earlier in the pipeline.
-The parameters were choosen to facilitate optimal merging without decrease in quality.
+The parameters were chosen to facilitate optimal merging without decrease in quality.
 Most of the reads were merged together, only having 1.83%  of the reads not merged.
 
 
 ## Constructing sequence table ##
-A sequence table is a matrix with rows corresponding to (and named by) the samples, and columns corresponding to (and named by) the sequence variants.
-From the table 11807 ASVs were inferred. 
-The lengths of the merged sequences had most of them fall in the same range although in some samples there was significant change.
+
+This is a sample by sequence feature table valued by the number of times each sequence was observed in each sample.
+The sequence table revealed 11807 ASVs.
+Majority of the merged sequences had similar lengths although in some samples there was significant change
+
 
 ## Removing chimeras ##
 Chimeric sequences are identified if they can be exactly reconstructed by combining a left-segment and a right-segment from two more abundant “parent” sequences.
-The removeBimeraDenovo function was used where sequence variants identified as bimeric are removed and bimera free collection of unique sequences is returned.
+The ```removeBimeraDenovo``` function was used where sequence variants identified as bimeric are removed and bimera free collection of unique sequences is returned.
 To minimize on time taken, multithreading was set to true.
 95.8% of the reads were retained.
+Chimera detection led to the identification of 7928 bimeras out of 11807 input sequences, therefore retaining 3879 ASVs.
 
 ## Tracking reads through the pipeline
 A mean of 79.68% of the reads were retained across all the processing steps of the pipeline.
+
+### Table 1. Summary table for reads tracking ###
 
 |             | Input            | Filtered         | dada_forward     | dada_reverse     | Merged           |  Non chimera              | final_perc_reads_retained |
 |-------------|------------------|------------------|------------------|------------------|------------------|---------------------------|---------------------------|
@@ -182,3 +250,153 @@ A mean of 79.68% of the reads were retained across all the processing steps of t
 |             | Input            | Filtered         | dada_forward     | dada_reverse     | Merged           |  Non chimera              | final_perc_reads_retained |
 
 ## Assigning Taxonomy
+
+In this step the input sequences to be classified are from the sequence table without chimeras while the training set of reference sequences with known taxonomy
+used was from silva database and taxonomy was assigned upto the species level.
+An alternative training set from RDP database was used but was found to have more NAs than silva hence silva was choosen to be used as input in phylogeny where
+needed.
+Taxonomy was assigned utilizing a minBootstrap confidence of 50 which is the default parameter for the DADA2 algorithm. However, one can optimize the minBootstrap confidece to a different value  eg. ```minBootstrap = 80```
+
+
+### Table 2. Taxonomic assignments of the top 50 ASVs ###
+
+|  | Kingdom | Phylum | Class | Order | Family | Genus | Species |
+|-|-|-|-|-|-|-|-|
+| ASV1 | Bacteria | Firmicutes | Bacilli | Lactobacillales | Lactobacillaceae | Lactobacillus | iners |
+| ASV2 | Bacteria | Firmicutes | Bacilli | Lactobacillales | Lactobacillaceae | Lactobacillus | NA |
+| ASV3 | Bacteria | Firmicutes | Negativicutes | Veillonellales-Selenomonadales | Veillonellaceae | Megasphaera | NA |
+| ASV4 | Bacteria | Firmicutes | Clostridia | Lachnospirales | Lachnospiraceae | Shuttleworthia | NA |
+| ASV5 | Bacteria | Actinobacteriota | Actinobacteria | Bifidobacteriales | Bifidobacteriaceae | Gardnerella | vaginalis |
+| ASV6 | Bacteria | Bacteroidota | Bacteroidia | Bacteroidales | Prevotellaceae | Prevotella | amnii |
+| ASV7 | Bacteria | Fusobacteriota | Fusobacteriia | Fusobacteriales | Leptotrichiaceae | Sneathia | NA |
+| ASV8 | Bacteria | Bacteroidota | Bacteroidia | Bacteroidales | Prevotellaceae | Prevotella | NA |
+| ASV9 | Bacteria | Firmicutes | Bacilli | Lactobacillales | Lactobacillaceae | Lactobacillus | crispatus |
+| ASV10 | Bacteria | Fusobacteriota | Fusobacteriia | Fusobacteriales | Leptotrichiaceae | Sneathia | sanguinegens |
+| ASV11 | Bacteria | Actinobacteriota | Actinobacteria | Bifidobacteriales | Bifidobacteriaceae | Gardnerella | vaginalis |
+| ASV12 | Bacteria | Firmicutes | Bacilli | Lactobacillales | Lactobacillaceae | Lactobacillus | NA |
+| ASV13 | Bacteria | Bacteroidota | Bacteroidia | Bacteroidales | Prevotellaceae | Prevotella | timonensis |
+| ASV14 | Bacteria | Bacteroidota | Bacteroidia | Bacteroidales | Prevotellaceae | Prevotella | amnii |
+| ASV15 | Bacteria | Firmicutes | Bacilli | Lactobacillales | Lactobacillaceae | Lactobacillus | NA |
+| ASV16 | Bacteria | Firmicutes | Negativicutes | Veillonellales-Selenomonadales | Veillonellaceae | Dialister | NA |
+| ASV17 | Bacteria | Actinobacteriota | Coriobacteriia | Coriobacteriales | Atopobiaceae | Atopobium | vaginae |
+| ASV18 | Bacteria | Firmicutes | Clostridia | Oscillospirales | Hungateiclostridiaceae | Fastidiosipila | NA |
+| ASV19 | Bacteria | Bacteroidota | Bacteroidia | Bacteroidales | Prevotellaceae | Prevotella_7 | melaninogenica |
+| ASV20 | Bacteria | Firmicutes | Bacilli | Lactobacillales | Lactobacillaceae | Lactobacillus | NA |
+| ASV21 | Bacteria | Firmicutes | Clostridia | Peptostreptococcales-Tissierellales | Family XI | Finegoldia | magna |
+| ASV22 | Bacteria | Firmicutes | Negativicutes | Veillonellales-Selenomonadales | Veillonellaceae | Megasphaera | NA |
+| ASV23 | Bacteria | Bacteroidota | Bacteroidia | Bacteroidales | Prevotellaceae | Prevotella | NA |
+| ASV24 | Bacteria | Bacteroidota | Bacteroidia | Bacteroidales | Prevotellaceae | Prevotella | disiens |
+| ASV25 | Bacteria | Bacteroidota | Bacteroidia | Bacteroidales | Prevotellaceae | Prevotella | NA |
+| ASV26 | Bacteria | Firmicutes | Bacilli | Lactobacillales | Lactobacillaceae | Lactobacillus | crispatus |
+| ASV27 | Bacteria | Bacteroidota | Bacteroidia | Bacteroidales | Prevotellaceae | Prevotella_7 | NA |
+| ASV28 | Bacteria | Actinobacteriota | Actinobacteria | Bifidobacteriales | Bifidobacteriaceae | Gardnerella | vaginalis |
+| ASV29 | Bacteria | Bacteroidota | Bacteroidia | Bacteroidales | Prevotellaceae | Prevotella | bivia |
+| ASV30 | Bacteria | Bacteroidota | Bacteroidia | Bacteroidales | Prevotellaceae | Prevotella | NA |
+| ASV31 | Bacteria | Fusobacteriota | Fusobacteriia | Fusobacteriales | Leptotrichiaceae | Sneathia | NA |
+| ASV32 | Bacteria | Proteobacteria | Gammaproteobacteria | Enterobacterales | Enterobacteriaceae | Escherichia-Shigella | NA |
+| ASV33 | Bacteria | Actinobacteriota | Actinobacteria | Bifidobacteriales | Bifidobacteriaceae | Gardnerella | vaginalis |
+| ASV34 | Bacteria | Fusobacteriota | Fusobacteriia | Fusobacteriales | Fusobacteriaceae | Fusobacterium | nucleatum |
+| ASV35 | Bacteria | Firmicutes | Bacilli | Lactobacillales | Streptococcaceae | Streptococcus | NA |
+| ASV36 | Bacteria | Patescibacteria | Saccharimonadia | Saccharimonadales | NA | NA | NA |
+| ASV37 | Bacteria | Firmicutes | Clostridia | Lachnospirales | Lachnospiraceae | Shuttleworthia | NA |
+| ASV38 | Bacteria | Firmicutes | Negativicutes | Veillonellales-Selenomonadales | Veillonellaceae | Veillonella | montpellierensis |
+| ASV39 | Bacteria | Firmicutes | Clostridia | Peptostreptococcales-Tissierellales | Family XI | Parvimonas | NA |
+| ASV40 | Bacteria | Firmicutes | Clostridia | Peptostreptococcales-Tissierellales | Family XI | Fenollaria | NA |
+| ASV41 | Bacteria | Firmicutes | Negativicutes | Veillonellales-Selenomonadales | Veillonellaceae | Dialister | NA |
+| ASV42 | Bacteria | Actinobacteriota | Actinobacteria | Corynebacteriales | Corynebacteriaceae | Corynebacterium | glucuronolyticum |
+| ASV43 | Bacteria | Actinobacteriota | Coriobacteriia | Coriobacteriales | Eggerthellaceae | DNF00809 | NA |
+| ASV44 | Bacteria | Firmicutes | Bacilli | Lactobacillales | Aerococcaceae | Aerococcus | christensenii |
+| ASV45 | Bacteria | Actinobacteriota | Actinobacteria | Bifidobacteriales | Bifidobacteriaceae | Gardnerella | NA |
+| ASV46 | Bacteria | Firmicutes | Bacilli | Lactobacillales | Lactobacillaceae | Lactobacillus | NA |
+| ASV47 | Bacteria | Bacteroidota | Bacteroidia | Bacteroidales | Porphyromonadaceae | Porphyromonas | uenonis |
+| ASV48 | Bacteria | Firmicutes | Clostridia | Peptostreptococcales-Tissierellales | Family XI | Peptoniphilus | NA |
+| ASV49 | Bacteria | Bacteroidota | Bacteroidia | Bacteroidales | Prevotellaceae | Prevotella | corporis |
+| ASV50 | Bacteria | Firmicutes | Clostridia | Lachnospirales | Lachnospiraceae | Shuttleworthia | NA |
+
+### Taxonomy rank statistics
+| Rank | Total assigned | % of ASVs assigned | No. of unique without NA|
+|-|-|-|-|
+| Kingdom | 3724 | 96.0 | 3 |
+| Phylum | 2829 | 72.93 | 18 |
+| Class | 2629 | 67.78 | 29 |
+| Order | 2572 | 66.31 | 63 |
+| Family | 2397 | 61.8 | 116 |
+| Genus | 1579 | 40.71 | 305 |
+| Species | 320 | 8.25 | 205 |
+
+## Phylogeny ##
+Phylogenetic relatedness is commonly used to inform downstream analyses, especially the calculation of phylogeny-aware distances between microbial communities. The DADA2 sequence inference method is reference-free, so we constructed the phylogenetic tree relating the inferred sequence variants de novo.
+Using the DECIPHER R package, Phylogenetic analysis was performed by firstly carrying out multiple sequence alignment after which a distance matrix was assigned for phylogenetic tree construction.
+Using the phangorn R package did Neighbor-Joining algorithm as our clustering method for phylogenetic inference.
+The Generalized Time Reversible Model (GTR) was used as the substitution model and stochastic rearrangement was set which allowed for random permutation in the phylogenetic tree.
+
+```
+Parameters used
+maxEE=c(3,3),
+m.phix=TRUE,
+truncLen=c(230,200),
+trimLeft = c(25,25),
+multithread = TRUE
+
+```
+## Alpha diversity ##
+Alpha diversity entails using summary metrics that describe individual samples.
+
+### Richness and diversity estimates ###
+Plotting was done using Chao1 richness esimates and Shannon diversity values. Chao1 is a richness estimator, “richness” being the total number of distinct ASVs in the samples while Shannon’s diversity index is a metric of diversity. The term diversity includes “richness” (the total number of your distinct units) and “evenness” (the relative proportions of all of your distinct units). We used the phyloseq package here using the ```plot_richness()``` function.
+
+### Figure 7. Richness Barplot for top 30 ASVS by abundance by age using inflammation as fill as BV as facet wrap
+
+![barplot](https://user-images.githubusercontent.com/57720624/113937411-cc01ee80-9801-11eb-9747-90ce9db32c5a.png)
+
+### Figure 8 Richness Barplot by abundance by BV using inflammation as fill and status i.e categories of BMI as facet wrap
+
+![bv_bmi](https://user-images.githubusercontent.com/57720624/114186830-fcf03980-994f-11eb-8f8e-d2f647386a03.png)
+
+
+### Figure 9 Richness Barplot by abundance by BV using BMI as fill and inflammation as facet wrap
+
+![bmi_inflammation](https://user-images.githubusercontent.com/57720624/114186922-142f2700-9950-11eb-9824-a584df8a1677.png)
+
+
+### Figure 10. Richness Boxplot
+
+![alpha-diversity](https://user-images.githubusercontent.com/57720624/113937097-539b2d80-9801-11eb-869c-a40de5b66e68.png)
+
+Median values and interquartile ranges indicated by the plots shows significant difference between Positive and negative BV samples (p-value <0.05).
+Negative BV samples showed greater CHAO/ACE values this leads to an expected higher species richness of the microbiota.
+The Simpson index,and the Shannon index showed higher the diversity of the microbiota in BV positive samples.
+
+## Beta diversity ##
+Principle Coordinates Analysis (PCoA) was plotted to offer multidimensional scaling that operates on dissimilarities or distances.
+The created phyloseq object was used for generating the PCoA plot since it is very convenient for displaying beta diversity among samples.
+
+
+### Figure 11. PCoA plot for  beta diversity visualization
+
+There was clustering observed. This is due to a positive correlation between high inflammation and positive BV.
+
+![PCoa plot](https://user-images.githubusercontent.com/57720624/113944120-b514c980-980c-11eb-8e85-8eeb3a781169.png)
+
+## Rarefaction analysis ##
+Rarefaction analysis revealed that majority of rarefaction curves flattened. However, there are about six troublesome samples with very low sequencing depth that need to be removed for further analysis.
+
+### Figure 12. Rarefaction curves
+
+![Rarefaction curve](https://user-images.githubusercontent.com/57720624/113938723-a675e480-9803-11eb-8f52-cb34d708dcef.png)
+
+## Taxanomic diversity
+
+### Figure 13. Phylum abundance in relation to BV status across the samples
+![Phylum nice](https://user-images.githubusercontent.com/57720624/114185635-9d455e80-994e-11eb-9d76-b0627b9e55c6.png)
+
+The dominant phylum across the different samples regardless of the BV status is Fusobacteriota while Bacteroidota is the second most dominant in BV positive.
+
+
+### Figure 14. Genus abundance in relation to BV status across the samples 
+![Genus](https://user-images.githubusercontent.com/57720624/114182895-dfb96c00-994b-11eb-9477-b6c5271acfea.png)
+
+There are different dominant genus according to the BV status as shown above
+
+
+
