@@ -328,7 +328,17 @@ Plotting was done using Chao1 richness esimates and Shannon diversity values. Ch
 
 ![barplot](https://user-images.githubusercontent.com/57720624/113937411-cc01ee80-9801-11eb-9747-90ce9db32c5a.png)
 
-### Figure 8. Richness Boxplot
+### Figure 8 Richness Barplot by abundance by BV using inflammation as fill and status i.e categories of BMI as facet wrap
+
+![bv_bmi](https://user-images.githubusercontent.com/57720624/114186830-fcf03980-994f-11eb-8f8e-d2f647386a03.png)
+
+
+### Figure 9 Richness Barplot by abundance by BV using BMI as fill and inflammation as facet wrap
+
+![bmi_inflammation](https://user-images.githubusercontent.com/57720624/114186922-142f2700-9950-11eb-9824-a584df8a1677.png)
+
+
+### Figure 10. Richness Boxplot
 
 ![alpha-diversity](https://user-images.githubusercontent.com/57720624/113937097-539b2d80-9801-11eb-869c-a40de5b66e68.png)
 
@@ -337,7 +347,7 @@ Principle Coordinates Analysis (PCoA) was plotted to offer multidimensional scal
 The created phyloseq object was used for generating the PCoA plot since it is very convenient for displaying beta diversity among samples.
 
 
-### Figure 9. PCoA plot for  beta diversity visualization
+### Figure 11. PCoA plot for  beta diversity visualization
 
 There was clustering observed. This is due to a positive correlation between high inflammation and positive BV.
 
@@ -346,6 +356,22 @@ There was clustering observed. This is due to a positive correlation between hig
 ## Rarefaction analysis ##
 Rarefaction analysis revealed that majority of rarefaction curves flattened. However, there are about six troublesome samples with very low sequencing depth that need to be removed for further analysis.
 
-### Figure 10. Rarefaction curves
+### Figure 12. Rarefaction curves
 
 ![Rarefaction curve](https://user-images.githubusercontent.com/57720624/113938723-a675e480-9803-11eb-8f52-cb34d708dcef.png)
+
+## Taxanomic diversity
+
+### Figure 13. Phylum abundance in relation to BV status across the samples
+![Phylum nice](https://user-images.githubusercontent.com/57720624/114185635-9d455e80-994e-11eb-9d76-b0627b9e55c6.png)
+
+The dominant phylum across the different samples regardless of the BV status is Fusobacteriota while Bacteroidota is the second most dominant in BV positive.
+
+
+### Figure 14. Genus abundance in relation to BV status across the samples 
+![Genus](https://user-images.githubusercontent.com/57720624/114182895-dfb96c00-994b-11eb-9477-b6c5271acfea.png)
+
+There are different dominant genus according to the BV status as shown above
+
+
+
