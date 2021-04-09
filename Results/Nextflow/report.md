@@ -205,6 +205,14 @@ In the diagram below, samples with high inflammation, cluster together, those wi
 
 The samples also cluster based on the Body Mass Index (BMI) as shown below:
 
+![BMI status PCoA](https://user-images.githubusercontent.com/55382239/114185107-037db180-994e-11eb-92c4-2ad682d2e1a3.png)
+
+### Evenness group significance
+Evenness refers to how well the taxa are distributed within samples, that is, their abundances.
+The figure below shows us the abundance of samples positive for BV and those negative for BV.
+![BV Evenness](file:///C:/Users/rnanjala/Downloads/alpha-compare.svg)
+
+
 
 
 
