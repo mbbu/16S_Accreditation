@@ -228,7 +228,7 @@ The figure below shows us the abundance of samples based on different parameters
 ![Age_Evenness](https://user-images.githubusercontent.com/55382239/114187166-5ce6e000-9950-11eb-9556-349b69178886.png)
 
 ### Shannon group significance
-Shannon index is a measure of entropy where the unit is bits of information if the logarithms are base 2.
+Shannon index is a measure of entropy taht is the measure of the amount of information in a system where the unit is bits of information if the logarithms are base 2.
 The diagrams below illustrate the shannon diversity index for each parameter.
 
 #### _Bacteria Vaginosis_ shannon index
