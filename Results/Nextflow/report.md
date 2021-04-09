@@ -180,10 +180,14 @@ Matching unique query sequences: 16998774 of 18128002 (93.77%)
 Alighnemt was done using `mafft` followed by masking non informative sites. The phylogenetic tree was constructed using `fasttree`.
 
 ## Taxonomy
-The Silva genes database was used for classification of  the ASVs.
+The Silva genes database was used for classification of  the ASVs. The classification presented below is up to level 3.
 
-BV negative samples were characterized by _Lactobacilli_ species. This trend was also observed with the inflamation status.
+BV negative samples were mostly characterized by _Lactobacillales_ species with relative abundance >50% for most samples as shown below. 
 
 ![BV status](figures/BV_taxonomy.png)
 
+Low inflammation status was majorly characterized with _Lactobacillales_ in most samples as seen below.
+
 ![Inflamation status](figures/Inflammation_taxonomy.png)
+
+## Alpha and Beta Diversity
