@@ -106,3 +106,10 @@ process TAXONOMIC_BARPLOT {
     """
 }
 
+// TODO Add rarefaction process the code is below
+//qiime diversity alpha-rarefaction \
+//--i-table ../artifacts/otu_tab.qza \
+//--i-phylogeny ../artifacts/rooted_tree.qza \
+//--p-max-depth 4000 \ #The max depth should be parsed from the feature table
+//--m-metadata-file ../set5_meta.txt \
+//--o-visualization rarefaction_4000.qzv
