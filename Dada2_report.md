@@ -19,6 +19,8 @@ if paired-end sequencing data, the forward and reverse fastq files contain reads
 8. grid
 9. reshape2
 10. profvis
+11. DECIPHER
+12. Rcolorbrewer
 
 The working directory will contain all the output from each processes if applicable
 
