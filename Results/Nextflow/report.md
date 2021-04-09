@@ -146,11 +146,22 @@ minseqlength 32: 1994 sequences discarded.
 uniqs.fasta: 114201/758165 chimeras (15.1%)
 ```
 
-## Cluster OTUs
+## Cluster ASVs
+We used the `usearch unoise3` algorithm to do clustering which has the following conditions
+		1. ASVs which are more than 97% identical are clustered together
+		2. Sequences with less than 8 counts are discarded. [Bokulich et al.](www.nature.com/nmeth/journal/v10/n1/full/nmeth.2276.html)
+		 suggest using a 0.005% minimum abundance threshold, which in our case came out to be ~9, that is what we specified.
+		3. Sequences are ranked based on abundance, singletons are discarded
+		4. Chimeric reads are discarded
 
-1760 Unique Sequences. The counts table contains 1493 OTU entries and counts for each sample.
+With these conditions the number of ASVs generated is lower compared to Dada2 pipeline. The advantage of `unoise3`
+it doesn't produce spurious ASVs which can be an issue in Dada2. It also shows the best balance between resolution and specificity.
+Comparisons of pipelines can be seen [here](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0227434) and
+[here](https://etd.library.emory.edu/concern/etds/xp68kh03w?locale=zh).
+
+1760 Unique Sequences were detected using `unoise3`. The counts table contains 1493 ASVs entries and counts for each sample.
 ```
-# Cluster Totals
+# Cluster Totals from Unoise3
 1760 good, 4228 chimeras
 
 # Counts table
