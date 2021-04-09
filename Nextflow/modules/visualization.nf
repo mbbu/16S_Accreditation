@@ -3,16 +3,21 @@
 process INTRO_DIVERSITY {
   tag "Introduction to diversity"
   publishDir path: { "${params.outdir}/visualization" }
-  
+
   input:
     tuple val(otu_tab), file(medata)
   output:
     file(otu_out)
+    path(pcoa)
   script:
   otu_out = "core-metrics-results"
+  pcoa = "pcoa-visualization.qzv"
     """
     qiime diversity core-metrics --i-table ${otu_tab} --p-sampling-depth 4000 --m-metadata-file ${medata} --output-dir ${otu_out}
-    
+
+    # Pcoa plot
+    qiime emperor plot --i-pcoa core-metrics-results/bray_curtis_pcoa_results.qza \
+    --m-metadata-file ${medata} --o-visualization pcoa-visualization.qzv
     """
 }
 
@@ -30,7 +35,7 @@ process ALPHA_DIVERSITY {
       #Alpha Diversity
       #Evenness
       qiime diversity alpha-group-significance --i-alpha-diversity ${vector}/evenness_vector.qza --m-metadata-file ${mdata} --o-visualization ${alpha_out}
-	
+
     """
 }
 
@@ -42,7 +47,7 @@ process SHANNON_DIVERSITY {
   input:
     tuple val(shvector), file(shmdata)
   output:
-    file(shannon_out)                                                                                                                                               
+    file(shannon_out)
   script:
     shannon_out = "shannon_group-significance.qzv"
     """
@@ -69,7 +74,7 @@ process BETA_DIVERSITY {
       qiime emperor plot --i-pcoa ${btvector}/bray_curtis_pcoa_results.qza --m-metadata-file ${btmdata} --o-visualization ${beta_out}
 
     """
-} 
+}
 
 process TAXONOMIC_BARPLOT {
     tag "generate taxonomic barplot"
