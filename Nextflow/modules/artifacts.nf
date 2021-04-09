@@ -31,11 +31,13 @@ process MAFFT_ALIGNMENT_PLUS {
 	file(masked)
 	file(unrooted_tree)
 	file(rooted)
+	path("unrooted-tree")
+	path("rooted-tree")
 
 	script:
 	aligned = "aligned_otus.qza"
 	masked = "masked_aligned_otus.qza"
-	unrooted_tree = 'unrooted_tree.qza'
+	unrooted = 'unrooted_tree.qza'
 	rooted = "rooted_tree.qza"
 
 	"""
@@ -43,8 +45,12 @@ process MAFFT_ALIGNMENT_PLUS {
 		--i-sequences ${otus_out} \
 		--o-alignment ${aligned} \
 		--o-masked-alignment ${masked} \
-		--o-tree ${unrooted_tree} \
+		--o-tree ${unrooted} \
 		--o-rooted-tree ${rooted}
+
+	# Export the phlogenetic tree in nwk information
+	qiime tools export --input-path ${unrooted} --output-path unrooted-tree
+	qiime tools export --input-path ${rooted} --output-path rooted-tree
 	"""
 }
 
@@ -99,4 +105,3 @@ process CLASSIFIER {
 
         """
 }
-
