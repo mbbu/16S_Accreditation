@@ -6,15 +6,16 @@ library(dada2)
 packageVersion("dada2") 
 
 #setwd("path to working directory")
+data <- "/data/accredetation/16S/test/Data/set5"  
 
-list.files() #make sure what we think is here is actually here
+list.files(data) #make sure what we think is here is actually here
 
 ## first we're setting a few variables we're going to use ##
 # one with all sample names, by scanning our "samples" file we made earlier
 #samples <- scan("samples", what="character")- this code worked in conjunction with a bash script
 #reading sample names using r
-Forward <- sort(list.files(, pattern= c("*_R1.fastq"), full.names = TRUE))
-Reverse <- sort(list.files(, pattern= c("*_R2.fastq"), full.names = TRUE))
+Forward <- sort(list.files(data, pattern= c("*_R1.fastq"), full.names = TRUE))
+Reverse <- sort(list.files(data, pattern= c("*_R2.fastq"), full.names = TRUE))
 reads <- c(Forward,Reverse)
 samples <- sapply(strsplit(basename(reads), "_"), `[`, 1)
 
@@ -227,6 +228,26 @@ ps.top30 <- transform_sample_counts(phyloseq_object, function(OTU) OTU/sum(OTU))
 ps.top30 <- prune_taxa(top30, ps.top30)
 top30plot <- plot_bar(ps.top30, x="Age", fill="Inflammation") + facet_wrap(~BV, scales="free_x")
 top30plot
+
+#To a use BMI in facet wrapping, we needed to mutate the sample data into 4 groups. This step required creation of a new phyloseq object
+# however this is not essential
+library(tidyverse)
+metadata <-  read.table("set5_meta.txt", sep = "\t", header = T,row.names = "sample") # remember to add path to your metadatafile
+yy <-  metadata %>%
+   mutate(status = BMI) %>% 
+   mutate(status = ifelse(status >= 30 , "Obese", status)) %>%
+   mutate(status = ifelse(status <= 18.5, "Underweight", status)) %>% 
+   mutate(status = ifelse(status > 18.5 & status < 25, "Normal", status)) %>% 
+   mutate(status = ifelse(status >= 25 & status < 30, "Overweight", status)) 
+
+#Second phyloseq object to be used in plotting, that incoparates the mutated metadata file.
+phyloseq_object_yy <- phyloseq(otu_table(seqtab.nochim,taxa_are_rows=FALSE),sample_data(yy),tax_table(taxa),phy_tree(fitGTR$tree))
+
+#bar plot of BV using inflammation as fill and facet wrapping with status i.e categories of BMI
+barplot2<- plot_bar(phyloseq_object_yy, x="BV", fill="Inflammation") + facet_wrap(~status, scales="free_x") 
+  
+#bar plot of BV using BMI as fill and facet wrapping with Inflamation.
+barplot1<- plot_bar(phyloseq_object, x="BV", fill="BMI") + facet_wrap(~Inflammation, scales="free_x") 
 
 #p values,shanon observed and simpson parameters
 
