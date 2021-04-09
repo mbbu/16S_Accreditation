@@ -179,3 +179,9 @@ Alighnemt was done using `mafft` followed by masking non informative sites. The 
 
 ## Taxonomy
 The Silva genes database was used for classification of  the ASVs.
+
+BV negative samples were characterized by _Lactobacilli_ species. This trend was also observed with the inflamation status.
+
+![BV status](figures/BV_taxonomy.png)
+
+![Inflamation status](figures/Inflammation_taxonomy.png)
