@@ -8,7 +8,7 @@ The 16S ribosomal RNA gene codes for the RNA component of the 30S subunit of the
 
 The 16S rRNA gene amplicon sequencing has gained popularity for microbial surveys within the environmental and biomedical sciences. At the [International Center of Insect Physiology and Ecology](www.icipe.org), 16S is widely used in insect gut microbiome and microbial symbionts. Notably, research within the center uses microbiome research to develop strategies to reduce disease transmission and control crop pests. This includes endosymbionts' role in making insects more resistant to pathogens and preventing disease transmission, such as in the African honey bees.
 
-We received a total of 124 paired-end reads samples with a length of 250bp. We also received the metadata file for each sample with the following fields: Sample, Inflammation, BV, Age, BMI. Further research and analysis revealed that the data was derived from a study on bacterial vaginosis. Our analysis and results interpretation is informed by that information, as we did not receive any description of the data. 
+We received a total of 124 paired-end reads samples with an average read length of 238bp. We also received the metadata file for each sample with the following fields: Sample, Inflammation, BV, Age, BMI. Further research and analysis revealed that the data was derived from a study on bacterial vaginosis. Our analysis and results interpretation is informed by that information, as we did not receive any description of the data. 
 
 
 ## Description of approach
@@ -18,61 +18,36 @@ The exercise was undertaken using the HPC available at the center. It is compose
 
 Further, we used Git and GitHub for collaboratively creating pipelines, sharing results, and discussing the output. Finally, for quick communication, we created a slack channel within our slack workspace. These tools allowed us to collaborate effectively. 
 
-In what follows, we describe the two pipelines used, our rationale for parameter and options chosen, and our interpretation of the results obtained. 
+The two pipelines are described indetail in two separate reports. We highlight our rationale for parameter and options chosen, and our interpretation of the results obtained. 
 
 ## Dada2 Pipeline
-Here is a [link](https://github.com/mbbu/16S_Accreditation/blob/Dada2_Report/Dada2_report.md) to our report highlighting all the steps undertaken in the DADA2 Pipeline.
+The report for [Dada2 Pipeline](https://github.com/mbbu/16S_Accreditation/blob/Dada2_Report/Dada2_report.md) highlights all the steps undertaken in the DADA2 pipeline.
 
 ## Qiime2 pipeline
+The report for [Qiime Nextflow Pipeline](https://github.com/mbbu/16S_Accreditation/blob/Dada2_Report/Dada2_report.md) describes the steps and results obtained when using Qiime2 pipeline.
+
 ### Tools used 
 **Usearch** 
-We had an issue with using usearch the 32-bit version simply because it is capped at 4GB maximum. When running the test analysis, our data was huge thus, we weren't able to run the Pipeline. We had to find an alternative which is vsearch, and find the equivalent commands on the vsearch tool: orientation, chimera detection, and dereplication.
+We had an issue with using usearch the 32-bit version simply because it is capped at 4GB maximum. When running the test analysis, our data was huge thus, we weren't able to run the pipeline. We had to find an alternative which is vsearch, and find the equivalent commands on the vsearch tool: orientation, chimera detection, and dereplication.
 
 **Vsearch**
 The vsearch version that ships with the Qiime 2020.8 environment is v2.7.0. This version does not have all the features we need. Hence we set up vsearch v2.16.0, which has orient and discarded the vsearch in the qiime environment. We used vsearch for most of the steps.
 
-
-## Questions to address
-### Input data assessment Questions
-
-- Were the number, length and quality of the reads obtained in line with what would be expected for the sequencing platform used?
-- Was the input dataset of sufficiently good quality to perform the analysis?
-- How did the reads' quality and GC content affect the way analysis was run?
-
-
-### Runtime analysis
-
-This is useful information for making predictions for the clients and collaborators.
-
-- How much time and disk space did each step of the workflow take?
-- How did the underlying hardware perform? Was it possible to do other things, or run other analyses on the same computer at the same time?
-
-
-
-**Table1:Platform and Disk Usage Statistics.** The amount of disk space and time taken by each step in the Pipeline is provided.
-|Analysis Step | time |Storage |
-| -------- | -------- | -------- |
-| Quality Check (fastqc)    |      |      |
-| Trimming | | |
-|Post -trimmming QC | | |
-|Merging | | |
-
-
-
-
-### Summary
+### Summary Answers to Key Questions
 Although these questions have already been captured within the report, we provide a summary of responses below. 
 
 **Table 2: Summary of responses to accreditation questions.**
 | Accreditation Question | Response |
 | -------- | -------- | 
-| What percentage of the reads were removed during the quality trimming step? Did all samples have similar number of reads after the preprocessing of reads steps? What was the median, maximum and minimum read count per sample? How many reads were discarded due to ambiguous bases?     | Approximately 11.6% of the reads were lost after trimming.     |
+|Were the number, length, and quality of the reads obtained in line with what would be expected for the sequencing platform used?| We received 124 paired-end sequences of average length of 238, and Phred scores quality of over 25 for most reads, except at the beginning. These are expected from reads generated using Illumina. |
+|Was the input dataset of sufficiently good quality to perform the analysis?|No. The data was characterized by low per base sequence content, high sequence duplication, and overrepresentation. |
+|How did the reads' quality and GC content affect the way analysis was run?|The quality of the reads informed the trimming parameters|
+| What percentage of the reads were removed during the quality trimming step? Did all samples have similar number of reads after the preprocessing of reads steps? What was the median, maximum and minimum read count per sample? How many reads were discarded due to ambiguous bases?     | Approximately 11.6% of the reads were lost after trimming. After trimming the sequences did not have the same length. Median=235 bp; Mean=234bp; min=187 bp. No ambiguous bases were found. |
 |What percentage of reads could not be stitched? Were unstitched reads retained or discarded?  |Using usearch merge, we were able to stitch 91.76%. Unstitched reads were discarded. Using Dada2 mergePairs, 1.83% of the reads were not merged |
 |How many chimeras were detected? | - **Qiime:** We found 114201 (15.1%) chimeras, 636866 (84.0%) non-chimeras, and 7098 (0.9%) borderline sequences in 758165 unique sequences. Taking abundance information into account, this corresponds to 378564 (2.1%) chimeras, 17362178 (97.5%) non-chimeras, and 64439 (0.4%) borderline sequences in 17805181 total sequences.  - **Dada2**: 95.8% of the reads were retained. Chimera detection led to the identification of 7928 bimeras out of 11807 input sequences, therefore retaining 3879 ASVs|
 |How does the trimming or filtering strategy affect the number of OTUs picked and the classification and phylogenetic analysis of the OTUs?|Trimming removes the primer set from our sequences while filtering removes the low-quality reads. A total of 755318 sequences were discarded.  |
-| How does the % similarity threshold used during OTU picking affect the number of OTUs identified and the classification and phylogenetic analysis of the OTUs?| |
-|How many OTUs were picked? What percentage of the OTUs could be classified to the genus and species level? What percentage of OTUs could only be assigned to taxonomic ranks higher than genus? What is the confidence threshold for the classifications? |**Dada2:** A total of 3879 ASVs were picked. Of these, 40.71% and 8.25 were assigned to genus and species level, repectively. 51% could only be asssigned to rank higher than genus. |
-| Does the use of a different 16S rRNA database for classification affect the results (e.g. were a lesser or greater number of OTUs classified to lower taxonomic ranks (genus, species))? Were any OTUs classified differently? | Dada2: |
+|How many OTUs were picked? What percentage of the OTUs could be classified to the genus and species level? What percentage of OTUs could only be assigned to taxonomic ranks higher than genus? What is the confidence threshold for the classifications? |**Dada2:** A total of 3879 ASVs were picked. Of these, 40.71% and 8.25 were assigned to genus and species level, respectively. 51% could only be assigned to rank higher than genus. Qiime: Found 1493, which is lower than Dada2 pipeline due to the stringency of usearch unoise3 algorithm, and possibly the database used (GreenGenes is smaller).|
+| Does the use of a different 16S rRNA database for classification affect the results (e.g. were a lesser or greater number of OTUs classified to lower taxonomic ranks (genus, species))? Were any OTUs classified differently? | Yes. Each of the databases has a different number of nodes, with SILVA having the largest and GreenGenes the lowest, and these affect the classification, especially to lower ranks.|
 | Did the samples have enough sequence depth to capture the diversity? Did the rarefaction curve flatten? Should any samples be excluded because of low read count? | Yes, it did. However, a few samples did not and were excluded. |
 |Were there any differences in the alpha diversity between the samples in the different metadata categories (e.g. higher phylogenetic diversity in treatment 1 vs. treatment 2)? | Yes, in particular, we observed a significant reduction in the genus lactobacillus for samples that were positive for BV. |
 |When groups of samples were compared (e.g. treatment 1 vs. treatment 2) based on distance metrics, such as unifrac, was there any particular clustering pattern observed?| Yes, using Bray Curtis Principal Coordinate Analysis (PcoA), we observed a clustering based on BV, inflammation and BMI |
