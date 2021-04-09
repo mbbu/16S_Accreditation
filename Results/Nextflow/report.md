@@ -209,10 +209,23 @@ The samples also cluster based on the Body Mass Index (BMI) as shown below:
 
 ### Evenness group significance
 Evenness refers to how well the taxa are distributed within samples, that is, their abundances.
-The figure below shows us the abundance of samples positive for BV and those negative for BV.
-![BV Evenness](file:///C:/Users/rnanjala/Downloads/alpha-compare.svg)
+The figure below shows us the abundance of samples based on different parameters:
 
+#### Samples positive for BV and those negative for BV.
 
+![BV Evenness](https://user-images.githubusercontent.com/55382239/114186808-f792ef00-994f-11eb-832b-7032e65a9a9e.png)
+
+#### Samples with high inflammation and low inflammation
+
+![Inflammation_evenness](https://user-images.githubusercontent.com/55382239/114186651-c87c7d80-994f-11eb-9b8c-522c504e91dd.png)
+
+#### Sample abundance based on BMI
+
+![BMI_Evenness](https://user-images.githubusercontent.com/55382239/114187081-4771b600-9950-11eb-8c0b-dd33080c49c2.png)
+
+#### Sample abundance based on age
+
+![Age_Evenness](https://user-images.githubusercontent.com/55382239/114187166-5ce6e000-9950-11eb-9556-349b69178886.png)
 
 
 
