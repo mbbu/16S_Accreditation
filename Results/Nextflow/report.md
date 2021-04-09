@@ -193,3 +193,6 @@ Low inflammation status was majorly characterized with _Lactobacillales_ in most
 ![Inflamation status](figures/Inflammation_taxonomy.png)
 
 ## Alpha and Beta Diversity
+### Bray Curtis Principal Coordinate Analysis (PcoA)
+The outcome of a PCoA tells us that objects ordinated closer to one another are more similar than those ordinated further away.
+
