@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 ## Overview #
 Here we present the use of Divisive Amplicon Denoising Algorithm 2 (DADA2) pipeline for 16s rRNA data analysis.
 This pipeline flow allows for the inference of true biological sequences from reads. The datasets used were 16S rRNA amplicon sequencing data from (input sample names).
@@ -8,6 +13,7 @@ To work on DADA2, the data needs to be demultiplexed and Non-biological nucleoti
 For this exercise, we received a total of 124 paired-end reads samples with an average read length of 238bp.
 
 For the DADA2 pipeline, the following packages were installed in the HPC and used for the analysis.
+
 |No | Tool |Version |
 | -------- | -------- | -------- |
 |1. |DADA2 | 1.18.0|
@@ -302,6 +308,7 @@ Taxonomy was assigned utilizing a `minBootstrap` confidence of 50, which is the 
 | ASV50 | Bacteria | Firmicutes | Clostridia | Lachnospirales | Lachnospiraceae | Shuttleworthia | NA |
 
 ### Taxonomy rank statistics
+
 | Rank | Total assigned | % of ASVs assigned | No. of unique without NA|
 |-|-|-|-|
 | Kingdom | 3724 | 96.0 | 3 |

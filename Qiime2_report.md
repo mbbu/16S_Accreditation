@@ -1,5 +1,11 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # Qiime Nexflow Pipeline
 We developed a Qiime2 16s nextflow workflow utilizing the following tools:
+
 | *Tool* | *Version* |
 |----| ------ |
 | fastqc | v0.11.9 |

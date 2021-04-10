@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # 16s RNA Accreditation Exercise Report - *icipe*
 **Participants:** Caleb Kibet, Festus Nyasimi, Ruth Nanjala, Winfred Gatua, Rose Wambui, Kauthar Omar, Asatsa Nabwire, Hebrew Simon, Eric Kariuki, Wilson Mudaki
 
@@ -39,6 +44,7 @@ A reproducible Qiime2 pipeline written in Nextflow is available [here](https://g
 Although these questions have already been captured within the report, we summarize the responses below. 
 
 **Table 2: Summary of responses to accreditation questions.**
+
 | Accreditation Question | Response |
 | -------- | -------- | 
 |Were the number, length, and quality of the reads obtained in line with what would be expected for the sequencing platform used?| We received 124 paired-end sequences of an average length of 238, and Phred scores quality of over 25 for most reads, except at the beginning. These are expected from reads generated using Illumina. |
