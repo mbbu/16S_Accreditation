@@ -11,7 +11,7 @@ Check this [contributors page](https://github.com/mbbu/16S_Accreditation/graphs/
 
 The main Accredidation Report is available [here](Accreditation_Report.md).
 
-## [Accreditation Report page](https://mbbu.github.io/16S_Accreditation/Dada2_report.html)
+## [Accreditation Report page](https://mbbu.github.io/16S_Accreditation)
 
 
 ## Thank You!
