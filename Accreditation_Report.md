@@ -21,14 +21,14 @@ Further, we used Git and GitHub for collaboratively creating pipelines, sharing 
 The two pipelines are described in two separate reports. We highlight our rationale for the parameter and options chosen and our interpretation of the results obtained. 
 
 ## Dada2 Pipeline
-The report for [Dada2 Pipeline](https://github.com/mbbu/16S_Accreditation/blob/main/Qiime2_report.md) describes all the steps undertaken in the DADA2 pipeline.
+The report for [Dada2 Pipeline](Dada2_report.md) describes all the steps undertaken in the DADA2 pipeline.
 
 
 Dada2 pipeline written in R is available [here](https://github.com/mbbu/16S_Accreditation/tree/main/Dada2_Pipeline). 
 
 
 ## Qiime2 pipeline
-The report for [Qiime Nextflow Pipeline](https://github.com/mbbu/16S_Accreditation/blob/main/Qiime2_report.md) describes the steps and results obtained when using Qiime2 pipeline.
+The report for [Qiime Nextflow Pipeline](Qiime2_report.md) describes the steps and results obtained when using Qiime2 pipeline.
 
 A reproducible Qiime2 pipeline written in Nextflow is available [here](https://github.com/mbbu/16S_Accreditation/tree/main/Qiime2_Nextflow)
 
