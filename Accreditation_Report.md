@@ -18,28 +18,21 @@ The exercise was undertaken using the HPC available at the center. It is compose
 
 Further, we used Git and GitHub for collaboratively creating pipelines, sharing results, and discussing the output. Finally, for quick communication, we created a slack channel within our slack workspace. These tools allowed us to collaborate effectively. 
 
-The two pipelines are described indetail in two separate reports. We highlight our rationale for parameter and options chosen, and our interpretation of the results obtained. 
+The two pipelines are described in two separate reports. We highlight our rationale for the parameter and options chosen and our interpretation of the results obtained. 
 
 ## Dada2 Pipeline
-The report for [Dada2 Pipeline](https://github.com/mbbu/16S_Accreditation/blob/main/Qiime2_report.md) describes all the steps undertaken in the DADA2 pipeline.
+The report for [Dada2 Pipeline](https://github.com/mbbu/16S_Accreditation/blob/Dada2_Report/Dada2_report.md) highlights all the steps undertaken in the DADA2 pipeline.
 
 ## Qiime2 pipeline
-The report for [Qiime Nextflow Pipeline](https://github.com/mbbu/16S_Accreditation/blob/main/Qiime2_report.md) describes the steps and results obtained when using Qiime2 pipeline.
-
-### Tools used 
-**Usearch** 
-We had an issue with using usearch the 32-bit version simply because it is capped at 4GB maximum. When running the test analysis, our data was huge thus, we weren't able to run the pipeline. We had to find an alternative which is vsearch, and find the equivalent commands on the vsearch tool: orientation, chimera detection, and dereplication.
-
-**Vsearch**
-The vsearch version that ships with the Qiime 2020.8 environment is v2.7.0. This version does not have all the features we need. Hence we set up vsearch v2.16.0, which has orient and discarded the vsearch in the qiime environment. We used vsearch for most of the steps.
+The report for [Qiime Nextflow Pipeline](https://github.com/mbbu/16S_Accreditation/blob/Dada2_Report/Dada2_report.md) describes the steps and results obtained when using Qiime2 pipeline.
 
 ### Summary Answers to Key Questions
-Although these questions have already been captured within the report, we provide a summary of responses below. 
+Although these questions have already been captured within the report, we summarize the responses below. 
 
 **Table 2: Summary of responses to accreditation questions.**
 | Accreditation Question | Response |
 | -------- | -------- | 
-|Were the number, length, and quality of the reads obtained in line with what would be expected for the sequencing platform used?| We received 124 paired-end sequences of average length of 238, and Phred scores quality of over 25 for most reads, except at the beginning. These are expected from reads generated using Illumina. |
+|Were the number, length, and quality of the reads obtained in line with what would be expected for the sequencing platform used?| We received 124 paired-end sequences of an average length of 238, and Phred scores quality of over 25 for most reads, except at the beginning. These are expected from reads generated using Illumina. |
 |Was the input dataset of sufficiently good quality to perform the analysis?|No. The data was characterized by low per base sequence content, high sequence duplication, and overrepresentation. |
 |How did the reads' quality and GC content affect the way analysis was run?|The quality of the reads informed the trimming parameters|
 | What percentage of the reads were removed during the quality trimming step? Did all samples have similar number of reads after the preprocessing of reads steps? What was the median, maximum and minimum read count per sample? How many reads were discarded due to ambiguous bases?     | Approximately 11.6% of the reads were lost after trimming. After trimming the sequences did not have the same length. Median=235 bp; Mean=234bp; min=187 bp. No ambiguous bases were found. |
@@ -53,10 +46,31 @@ Although these questions have already been captured within the report, we provid
 |When groups of samples were compared (e.g. treatment 1 vs. treatment 2) based on distance metrics, such as unifrac, was there any particular clustering pattern observed?| Yes, using Bray Curtis Principal Coordinate Analysis (PcoA), we observed a clustering based on BV, inflammation and BMI |
 | Were any of the OTUs significantly correlated to any of the treatments or other metadata? | Yes, there were OTUs significantly correlated to the BV and Inflammation status. |
 
-## Comparing Pipelines
+
+## Challenges
+### Commercial tools
+**Usearch** 
+We had an issue using usearch the 32-bit version simply because it is capped at 4GB maximum. Our data was huge when running the test analysis; thus, we couldn't run the pipeline. We had to find an alternative, vsearch, and find the equivalent commands on the vsearch tool: orientation, chimera detection, and dereplication.
+
+**Vsearch**
+The vsearch version that ships with the Qiime 2020.8 environment is v2.7.0. This version does not have all the features we need. Hence we set up vsearch v2.16.0, which has orient and discarded the vsearch in the Qiime2 environment. We used vsearch for most of the steps.
+
+### Internet Outage
+During the exercise, the center experienced an internet outage and cut off access to the HPC we used for our analysis. This derailed the progress and time it took for the analysis. The current setup of the HPC is restricted for access outside the center. 
+
+Due to the third COVID wave and the requirement to work from home, the curfews imposed by the government slowed down some of the runs. We worked around this by having some members access the center within the provided protocols. 
+
+### Qiime2 GUI and restricted to online visualization
+The Qiime2 pipeline has advanced GUI visualization, which is excellent for users with limited compute ability. However, the use of proprietary file format, the need to visualize online, and lack of text files for easy parsing and export of figures. Therefore, although we developed a reproducible workflow using Nextflow, the look, feel and setings of the figures have to be done manually, hence reducing reproducibility at that stage. On this challenge, we found Dada2 to provide more flexibility and control by the user. 
 
 
 ## Conclusion
+We have successfully analyzed microbial 16S rRNA amplicon sequencing using Qiime2 and Dada2 pipelines, some of the most commonly used. From the ASVs picked, we observed that the diversity of the microbiota is altered by BV, which leads to increased inflammation in the positive samples.
 
+![](https://i.imgur.com/3NQ4gBl.png)
 
-## References
+![](https://i.imgur.com/zw5QSRN.png)
+
+We note that the quality of the ASVs identified is determined by the pipeline, the database, and the algorithm used in OTU/ASV picking. It is essential to compare the output for concordance.
+
+The computational resources available at *icipe* are sufficient to perform the analysis of such scale. During the analysis, the HPC was still capable of undertaking other work, including whole-genome alignment and ChIP-seq peak calling.
