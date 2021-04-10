@@ -25,13 +25,13 @@ Our analysis pipeline follows the following order:
 
 This workflow has been summarized in the Nextflow analysis figure below.
 
-![](./pipeline_info/pipeline_dag.png)
+![](./Results/Nextflow/pipeline_info/pipeline_dag.png)
 
 ## Sample info
 We had a total of 124 paired end reads samples. These samples had a length of 250bp.
 
 ## Runtime analysis
-The total runtime of each process is summarized in this Nextflow [report](./pipeline_info/execution_timeline.html).
+The total runtime of each process is summarized in this Nextflow [report](./Results/Nextflow/pipeline_info/execution_timeline.html).
 The timeline report shows the job wall time and memory used by each individual sample in the different steps. It also provides info on the total
 time used to run the entire workflow.
 
