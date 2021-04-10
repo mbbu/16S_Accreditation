@@ -1,7 +1,7 @@
 # Qiime Nexflow Pipeline
 We developed a Qiime2 16s nextflow workflow utilizing the following tools:
 | *Tool* | *Version* |
-|:----:| :------ |
+|----| ------ |
 | fastqc | v0.11.9 |
 | multiqc | v1.4 |
 | trimommatic | v0.39 |
