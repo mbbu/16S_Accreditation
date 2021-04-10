@@ -3,7 +3,7 @@ output:
   pdf_document: default
   html_document: default
 ---
-# 16s RNA Accreditation Exercise Report - *icipe*
+# 16S rRNA Accreditation Exercise Report - *icipe*
 **Participants:** Caleb Kibet, Festus Nyasimi, Ruth Nanjala, Winfred Gatua, Rose Wambui, Kauthar Omar, Asatsa Nabwire, Hebrew Simon, Eric Kariuki, Wilson Mudaki
 
 **Submitted:** 9th April 2021
