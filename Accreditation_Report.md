@@ -24,8 +24,16 @@ The two pipelines are described in two separate reports. We highlight our ration
 The report for [Dada2 Pipeline](https://github.com/mbbu/16S_Accreditation/blob/main/Qiime2_report.md) describes all the steps undertaken in the DADA2 pipeline.
 
 
+Dada2 pipeline written in R is available [here](https://github.com/mbbu/16S_Accreditation/tree/main/Dada2_Pipeline). 
+
+
 ## Qiime2 pipeline
 The report for [Qiime Nextflow Pipeline](https://github.com/mbbu/16S_Accreditation/blob/main/Qiime2_report.md) describes the steps and results obtained when using Qiime2 pipeline.
+
+A reproducible Qiime2 pipeline written in Nextflow is available [here](https://github.com/mbbu/16S_Accreditation/tree/main/Qiime2_Nextflow)
+
+![](https://i.imgur.com/p62VIec.png)
+
 
 ### Summary Answers to Key Questions
 Although these questions have already been captured within the report, we summarize the responses below. 
@@ -66,12 +74,14 @@ The Qiime2 pipeline has advanced GUI visualization, which is excellent for users
 
 
 ## Conclusion
-We have successfully analyzed microbial 16S rRNA amplicon sequencing using Qiime2 and Dada2 pipelines, some of the most commonly used. From the ASVs picked, we observed that the diversity of the microbiota is altered by BV, which leads to increased inflammation in the positive samples.
+We have successfully analyzed microbial 16S rRNA amplicon sequencing using Qiime2 and Dada2 pipelines, some of the most commonly used. From the ASVs picked, we observed that the diversity of the microbiota is altered by BV, which leads to increased inflammation in the positive samples, consistent with [literature](https://journals.lww.com/stdjournal/Fulltext/2019/01000/A_Prospective_Cohort_Study_of_the_Association.6.aspx).
 
 ![](https://i.imgur.com/3NQ4gBl.png)
 
 ![](https://i.imgur.com/zw5QSRN.png)
 
 We note that the quality of the ASVs identified is determined by the pipeline, the database, and the algorithm used in OTU/ASV picking. It is essential to compare the output for concordance.
+
+![](https://i.imgur.com/WmrB19k.png)
 
 The computational resources available at *icipe* are sufficient to perform the analysis of such scale. During the analysis, the HPC was still capable of undertaking other work, including whole-genome alignment and ChIP-seq peak calling.
