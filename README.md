@@ -4,7 +4,7 @@
 ## About Project
 This project creates a workflow for 16SrRNA analysis for the H3ABioNet accreditation.The 16S rRNA is a ribosomal RNA necessary for the synthesis of all prokaryotic proteins.To read more on this [click here](https://www.cd-genomics.com/blog/16s-rrna-one-of-the-most-important-rrnas/).
 
-## [Main Report page](https://mbbu.github.io/16S_Accreditation)
+## [Main Report page](https://mbbu.github.io/16S_Accreditation/Accreditation_Report.html)
 
 ## Dada2 Pipeline
 The report for [Dada2 Pipeline](Dada2_report.md) describes all the steps undertaken in the DADA2 pipeline.
