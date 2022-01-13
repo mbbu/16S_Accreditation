@@ -68,13 +68,13 @@ workflow{
     INTRO_DIVERSITY(FEATURE_TABLE.out.combine(medata_ch))
 
     // step 1: Alpha diversity
-    ALPHA_DIVERSITY(INTRO_DIVERSITY.out.combine(medata_ch))
+   // ALPHA_DIVERSITY(INTRO_DIVERSITY.out.combine(medata_ch))
 
     // step2: Shannon diversity
-    SHANNON_DIVERSITY(INTRO_DIVERSITY.out.combine(medata_ch))
+   // SHANNON_DIVERSITY(INTRO_DIVERSITY.out.combine(medata_ch))
 
     // step3: Beta diversity
-    BETA_DIVERSITY(INTRO_DIVERSITY.out.combine(medata_ch))
+   // BETA_DIVERSITY(INTRO_DIVERSITY.out.combine(medata_ch))
     
     // step4: Taxonomic_barplot
     TAXONOMIC_BARPLOT(OTU_CONVERSION.out, FEATURE_TABLE.out, CLASSIFIER.out, medata_ch)
