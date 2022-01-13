@@ -1,7 +1,9 @@
 <img src="https://avatars.githubusercontent.com/u/49394656?s=200&v=4"/>
 
-[![](https://img.shields.io/badge/left-right-f39f37)](#)
+<!-- [![](https://img.shields.io/badge/left-right-f39f37)](#) -->
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A520.10.0-23aa62.svg?labelColor=000000)](https://www.nextflow.io/)
+[![](https://img.shields.io/badge/contributors-9-f39f37)](https://github.com/mbbu/16S_Accreditation/graphs/contributors)
+[![](https://img.shields.io/badge/build-passing-f39f37labelColor=brightgreen)](#)
 # Introduction
 This pipeline is for analysis of 16s rRNA
 # Pipeline Summary
