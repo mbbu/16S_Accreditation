@@ -55,7 +55,7 @@ workflow{
     // step 1
     OTU_CONVERSION(CLUSTER_OTUS_U.out.otus_fasta)
     // step 2
-   // MAFFT_ALIGNMENT_PLUS(OTU_CONVERSION.out)
+    MAFFT_ALIGNMENT_PLUS(OTU_CONVERSION.out)
     // step 3
     OTUTABLE_TO_ARTIFACT(CLUSTER_OTUS_U.out.otutab_txt)
     //step 4
@@ -65,16 +65,16 @@ workflow{
 
     //VISUALIZATION
     // step 0: Intro_diversity
-   // INTRO_DIVERSITY(FEATURE_TABLE.out.combine(medata_ch))
+    INTRO_DIVERSITY(FEATURE_TABLE.out.combine(medata_ch))
 
     // step 1: Alpha diversity
-   // ALPHA_DIVERSITY(INTRO_DIVERSITY.out.combine(medata_ch))
+    ALPHA_DIVERSITY(INTRO_DIVERSITY.out.combine(medata_ch))
 
     // step2: Shannon diversity
-   // SHANNON_DIVERSITY(INTRO_DIVERSITY.out.combine(medata_ch))
+    SHANNON_DIVERSITY(INTRO_DIVERSITY.out.combine(medata_ch))
 
     // step3: Beta diversity
-   // BETA_DIVERSITY(INTRO_DIVERSITY.out.combine(medata_ch))
+    BETA_DIVERSITY(INTRO_DIVERSITY.out.combine(medata_ch))
     
     // step4: Taxonomic_barplot
     TAXONOMIC_BARPLOT(OTU_CONVERSION.out, FEATURE_TABLE.out, CLASSIFIER.out, medata_ch)
