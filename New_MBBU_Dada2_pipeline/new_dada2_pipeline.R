@@ -6,7 +6,7 @@ library(dada2)
 packageVersion("dada2") 
 
 #setwd("path to working directory")
-data <- readline(prompt = "Enter the file path for the data: ") #provide a path for the input data 
+data <- "path/to/data" #provide a path for the input data 
 
 list.files(data) #make sure what we think is here is actually here
 
@@ -167,13 +167,13 @@ write.table(summary_tab, "read-count-tracking.tsv", quote=FALSE, sep="\t", col.n
 #assigning taxonomy
 
 
-#taxa <- assignTaxonomy(seqtab.nochim,"/data/asatsa/dada2_preprocess/dada2_amplicon_ex_workflow/refdb/silva_nr99_v138.1_train_set.fa",tryRC = TRUE)
+taxa <- assignTaxonomy(seqtab.nochim,"dada2_preprocess/dada2_amplicon_ex_workflow/refdb/silva_nr99_v138.1_train_set.fa",tryRC = TRUE)
 
-#taxa <- addSpecies(taxa, "/data/asatsa/dada2_preprocess/dada2_amplicon_ex_workflow/refdb/silva_species_assignment_v138.1.fa.gz",tryRC = TRUE)
+taxa <- addSpecies(taxa, "dada2_preprocess/dada2_amplicon_ex_workflow/refdb/silva_species_assignment_v138.1.fa.gz",tryRC = TRUE)
 
-taxa <- readline(prompt = "Enter the file path for the silva reference database: ")
+#taxa <- readline(prompt = "Enter the file path for the silva reference database: ")
   
-write.table(taxa, "taxa_silva_taxonomy.tsv", sep = "\t", quote=F, col.names=NA) 
+#write.table(taxa, "taxa_silva_taxonomy.tsv", sep = "\t", quote=F, col.names=NA) 
 
 #alternative training database in assigning taxonomy. 
 #taxa_rdp <- assignTaxonomy(seqtab.nochim,"/data/kauthar/Dada2/training_data/rdp_train_set_18.fa",tryRC = TRUE)
@@ -242,7 +242,7 @@ library(phyloseq)
 
 library('phyloseq')
 #NB: Provide a path to the set5_meta.txt file and ensure your file has the sample column labelled sample if not add the label. 
-samdata <- read.table("path/to/the/metadt.tsv", header = TRUE, sep="\t", row.names = samples_F)
+samdata <- read.table("metadatat.tsv", header = TRUE, sep="\t", row.names = samples_F)
 samples_F
 samdata
 phyloseq_object <- phyloseq(otu_table(seqtab.nochim,taxa_are_rows=FALSE),sample_data(samdata),tax_table(taxa),phy_tree(fitGTR$tree))
